@@ -1,4 +1,5 @@
 #pragma once
+#include "userManager.h"
 
 class MainMenu{
     public:
@@ -7,4 +8,8 @@ class MainMenu{
         void processUserChoice(int userChoice, bool &repeat);
         int getUserOption();
         void displayMenu();
+    
+    private:
+        UserManager userManager;
+        void createAccount();
 };

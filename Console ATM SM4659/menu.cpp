@@ -15,7 +15,6 @@ void MainMenu::displayMenu(){
     cout << "3) Quit" << endl;
     cout << "***********************************" << endl;
     cout << "Enter your choice: " << endl;
-     
 }
 
 int MainMenu::getUserOption(){
@@ -30,6 +29,7 @@ void MainMenu::processUserChoice(int userChoice, bool &repeat){
             break;
         case 2: 
             cout << "Create account" << endl;
+            createAccount();
             break;
         case 3:
             cout << "Goodbye" << endl;
@@ -38,4 +38,30 @@ void MainMenu::processUserChoice(int userChoice, bool &repeat){
             cout << "Invalid entry" << endl;
             break;
     }
+}
+
+void MainMenu::createAccount(){
+    string username, password, confirmPassword;
+    cout << "Please enter a username for your account." << endl;
+    do{
+        cin >> username;
+        if(!userManager.isUniqueUsername(username)){
+            cout << "That username already exists. Please enter another username." << endl;
+        }
+    } while(!userManager.isUniqueUsername(username));
+    cout << "Please enter a password. Password should be between 8 and 15 characters long and contain at least 1 number and 1 symbol." << endl;
+    do{
+        cin >> password;
+        cout << "Enter the same password again." << endl;
+        cin >> confirmPassword;
+        if(!password.compare(confirmPassword)){
+            cout << "Your confirm password does not match your password. Please try again." << endl;
+            cin >> password;
+            cout << "Enter the same password again." << endl;
+            cin >> confirmPassword;
+        }
+        if(!userManager.validatePassword(password)){
+            cout << "That password is invalid. Please try again." << endl;
+        }
+    } while(!userManager.validatePassword(password));
 }

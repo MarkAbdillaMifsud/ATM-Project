@@ -11,9 +11,9 @@ class UserManager{
         bool createUser(const string& userName, const string& password);
         void saveUsers();
         void loadUsers();
-    
+        bool isUniqueUsername(const string &username);
+        bool validatePassword(const string &password);
+
     private:
         vector<User> users;
-        bool isUniqueUsername(const string& username);
-        bool validatePassword(const string& password);
 };

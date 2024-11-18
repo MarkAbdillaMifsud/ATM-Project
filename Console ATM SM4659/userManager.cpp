@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "user.h"
 #include "userManager.h"
 
@@ -46,7 +47,19 @@ bool UserManager::validatePassword(const string& password){
 }
 
 void UserManager::saveUsers(){
-    //TODO: Implement later
+    //TODO: Implement later (this is where we save new accounts and update users on the CSV)
+    ofstream userAccountsFile{"userAccounts.csv"};
+
+    if(userAccountsFile.fail()){
+        throw invalid_argument("File not found");
+    }
+
+    for(const User& user : users){
+        userAccountsFile << user.getUsername() << "," << user.getPassword() << "\n";
+    }
+
+    userAccountsFile.close();
+    cout << "User data saved successfully" << endl;
 }
 
 void UserManager::loadUsers(){

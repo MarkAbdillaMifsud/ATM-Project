@@ -1,5 +1,6 @@
 #include <iostream>
 #include "menu.h"
+#include "userManager.h"
 
 using namespace std;
 
@@ -42,13 +43,17 @@ void MainMenu::processUserChoice(int userChoice, bool &repeat){
 
 void MainMenu::createAccount(){
     string username, password, confirmPassword;
+    bool validUsername = false; 
+    bool validPassword = false;
     cout << "Please enter a username for your account." << endl;
     do{
         cin >> username;
         if(!userManager.isUniqueUsername(username)){
             cout << "That username already exists. Please enter another username." << endl;
+        } else {
+            validUsername = true;
         }
-    } while(!userManager.isUniqueUsername(username));
+    } while(!validUsername);
     cout << "Please enter a password. Password should be between 8 and 15 characters long and contain at least 1 number and 1 symbol." << endl;
     do{
         cin >> password;
@@ -62,6 +67,14 @@ void MainMenu::createAccount(){
         }
         if(!userManager.validatePassword(password)){
             cout << "That password is invalid. Please try again." << endl;
+        } else {
+            validPassword = true;
         }
-    } while(!userManager.validatePassword(password));
+    } while(!validPassword);
+
+    if(userManager.createUser(username, password)){
+        cout << "Account created successfully" << endl;
+        userManager.saveUsers();
+    }
 }
+    

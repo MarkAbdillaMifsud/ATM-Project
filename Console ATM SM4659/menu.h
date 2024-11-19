@@ -12,4 +12,5 @@ class MainMenu{
     private:
         UserManager userManager;
         void createAccount();
+        void login();
 };

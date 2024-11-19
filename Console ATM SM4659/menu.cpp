@@ -27,6 +27,7 @@ void MainMenu::processUserChoice(int userChoice, bool &repeat){
     switch(userChoice){
         case 1: 
             cout << "Time to login" << endl;
+            login();
             break;
         case 2: 
             cout << "Create account" << endl;
@@ -38,6 +39,22 @@ void MainMenu::processUserChoice(int userChoice, bool &repeat){
         default:
             cout << "Invalid entry" << endl;
             break;
+    }
+}
+
+void MainMenu::login(){
+    string username, password;
+    
+    cout << "Enter your username" << endl;
+    cin >> username;
+    cout << "Enter your password" << endl;
+    cin >> password;
+
+    if(userManager.login(username, password)){
+        cout << "Login successful. Welcome, " << username << ". \n";
+        //Send user to account menu
+    } else {
+        cout << "Login unsuccessful. Please try again" << endl;
     }
 }
 
@@ -59,14 +76,13 @@ void MainMenu::createAccount(){
         cin >> password;
         cout << "Enter the same password again." << endl;
         cin >> confirmPassword;
-        if(!password.compare(confirmPassword)){
+        if(password != confirmPassword){
             cout << "Your confirm password does not match your password. Please try again." << endl;
-            cin >> password;
-            cout << "Enter the same password again." << endl;
-            cin >> confirmPassword;
+            continue;
         }
         if(!userManager.validatePassword(password)){
             cout << "That password is invalid. Please try again." << endl;
+            continue;
         } else {
             validPassword = true;
         }

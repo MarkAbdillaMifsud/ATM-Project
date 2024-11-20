@@ -7,6 +7,10 @@ using namespace std;
 MainMenu::MainMenu(){}
 int userOption;
 
+void MainMenu::init(){
+    userManager.loadUsers();
+}
+
 void MainMenu::displayMenu(){
     cout << "***********************************" << endl;
     cout << "Welcome to user's ATM" << endl;

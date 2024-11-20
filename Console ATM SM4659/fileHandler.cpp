@@ -6,8 +6,9 @@
 
 using namespace std;
 
-void FileHandler::loadFromCSV(vector<User>& users){
-    ifstream file("users.csv");
+void FileHandler::loadFromCSV(vector<User> &users, const string &filename)
+{
+    ifstream file(filename);
     string line;
     while(getline(file, line)){
         istringstream ss(line);
@@ -19,8 +20,8 @@ void FileHandler::loadFromCSV(vector<User>& users){
     file.close();
 }
 
-void FileHandler::saveToCSV(const vector<User>& users){
-    ofstream file("users.csv");
+void FileHandler::saveToCSV(const vector<User>& users, const string& filename){
+    ofstream file(filename);
     for(const User& user : users){
         file << user.getUsername() << "," << user.getPassword() << "\n";
     }

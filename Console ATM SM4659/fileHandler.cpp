@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void FileHandler::loadFromCSV(vector<User> &users, const string &filename)
+void FileHandler::loadFromCSV(unordered_map<string, User> &users, const string &filename)
 {
     ifstream file(filename);
 
@@ -21,13 +21,15 @@ void FileHandler::loadFromCSV(vector<User> &users, const string &filename)
         istringstream ss(line);
         string username, password;
         if(getline(ss, username, ',') && getline(ss, password)){
-            users.emplace_back(username, password);
+            users.emplace(username, User(username, password));
+        } else {
+            cerr << "Error parsing line: " << line << endl;
         }
     }
     file.close();
 }
 
-void FileHandler::saveToCSV(const vector<User>& users, const string& filename){
+void FileHandler::saveToCSV(const unordered_map<string, User>& users, const string& filename){
     ofstream file(filename);
 
     if (!file.is_open())
@@ -36,8 +38,13 @@ void FileHandler::saveToCSV(const vector<User>& users, const string& filename){
         return;
     }
 
-    for(const User& user : users){
+    for(const auto& pair : users){
+        const User& user = pair.second;
         file << user.getUsername() << "," << user.getPassword() << "\n";
+        if (file.fail()) {
+            cerr << "Error writing to file: " << filename << endl;
+            file.close();
+        }
     }
     file.close();
 }

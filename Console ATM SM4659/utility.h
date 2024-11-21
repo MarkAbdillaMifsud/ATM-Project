@@ -3,5 +3,5 @@
 
 class Utility{
     public:
-        static bool isValidPassword(const string& password);
+        static bool isValidPassword(const std::string& password);
 };

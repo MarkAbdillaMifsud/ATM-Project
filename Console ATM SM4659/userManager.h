@@ -1,17 +1,18 @@
 #pragma once
 #include "user.h"
-#include <vector>
+#include <unordered_map>
 
 class UserManager{
     public:
         UserManager();
-        bool login(const string& userName, const string& password);
-        bool createUser(const string& userName, const string& password);
+        bool login(const std::string &userName, const std::string &password);
+        bool createUser(const std::string &userName, const std::string &password);
         void saveUsers();
         void loadUsers();
-        bool isUniqueUsername(const string &username);
-        bool validatePassword(const string &password);
+        bool isUniqueUsername(const std::string &username);
+        bool validatePassword(const std::string &password);
 
     private:
-        vector<User> users;
+        std::unordered_map<std::string, User> users;
+        User* loggedInUser;
 };

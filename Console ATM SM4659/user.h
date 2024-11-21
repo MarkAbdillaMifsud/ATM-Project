@@ -3,13 +3,13 @@
 
 class User{
     public:
-        User(const string& username, const string& password);
-        string getUsername() const;
-        string getPassword() const;
-        void setUsername(const string& username);
-        void setPassword(const string& password);
+        User(const std::string& username, const std::string& password);
+        std::string getUsername() const;
+        std::string getPassword() const;
+        void setUsername(const std::string& username);
+        void setPassword(const std::string& password);
     
     private:
-        string username;
-        string password;
+        std::string username;
+        std::string password;
 };

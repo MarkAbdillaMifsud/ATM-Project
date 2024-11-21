@@ -2,6 +2,8 @@
 #include <string>
 #include "utility.h"
 
+using namespace std;
+
 bool Utility::isValidPassword(const string& password){
     if(password.length() < 8 || password.length() > 15){
         return false;

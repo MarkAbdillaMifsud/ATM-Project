@@ -8,7 +8,6 @@
 using namespace std;
 
 MainMenu::MainMenu(){}
-int userOption;
 
 void MainMenu::init(){
     userManager.loadUsers();
@@ -26,7 +25,12 @@ void MainMenu::displayMenu(){
 }
 
 int MainMenu::getUserOption(){
-    cin >> userOption;
+    while (!(cin >> userOption))
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid input. Please enter a number: ";
+    }
     return userOption;
 }
 

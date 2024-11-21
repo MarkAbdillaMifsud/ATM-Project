@@ -2,21 +2,20 @@
 
 using namespace std;
 
-User::User(const string& userName, const string& password):
-    userName(userName), password(password){}
+User::User(const string& userName, const string& password) : username(userName), password(password) {}
 
 string User::getUsername() const{
-    return userName;
+    return username;
 }
 
 string User::getPassword() const{
     return password;
 }
 
-void User::setUsername(string userName){
-    this->userName = userName;
+void User::setUsername(const string& username) {
+    this->username = username;
 }
 
-void User::setPassword(string password){
+void User::setPassword(const string& password){
     this->password = password;
 }

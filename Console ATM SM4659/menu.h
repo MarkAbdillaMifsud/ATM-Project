@@ -13,4 +13,5 @@ class MainMenu{
         UserManager userManager;
         void createAccount();
         void login();
+        int userOption;
 };

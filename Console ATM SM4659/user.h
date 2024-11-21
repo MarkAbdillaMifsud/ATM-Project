@@ -1,17 +1,15 @@
 #pragma once
 #include <string>
 
-using namespace std;
-
 class User{
     public:
-        User(const string& userName, const string& password);
+        User(const string& username, const string& password);
         string getUsername() const;
         string getPassword() const;
-        void setUsername(string userName);
-        void setPassword(string password);
+        void setUsername(const string& username);
+        void setPassword(const string& password);
     
     private:
-        string userName;
+        string username;
         string password;
 };

@@ -2,8 +2,6 @@
 #include "user.h"
 #include <vector>
 
-using namespace std;
-
 class UserManager{
     public:
         UserManager();

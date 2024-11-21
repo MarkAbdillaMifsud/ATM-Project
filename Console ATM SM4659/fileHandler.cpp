@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -9,6 +10,12 @@ using namespace std;
 void FileHandler::loadFromCSV(vector<User> &users, const string &filename)
 {
     ifstream file(filename);
+
+    if(!file.is_open()){
+        cerr << "Error opening file: " << filename << endl;
+        return;
+    }
+
     string line;
     while(getline(file, line)){
         istringstream ss(line);
@@ -22,6 +29,13 @@ void FileHandler::loadFromCSV(vector<User> &users, const string &filename)
 
 void FileHandler::saveToCSV(const vector<User>& users, const string& filename){
     ofstream file(filename);
+
+    if (!file.is_open())
+    {
+        cerr << "Error opening file for writing: " << filename << endl;
+        return;
+    }
+
     for(const User& user : users){
         file << user.getUsername() << "," << user.getPassword() << "\n";
     }

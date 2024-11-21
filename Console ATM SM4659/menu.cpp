@@ -1,4 +1,7 @@
 #include <iostream>
+#include <cstdlib>
+#include <stdexcept>
+#include <limits>
 #include "menu.h"
 #include "userManager.h"
 
@@ -28,21 +31,31 @@ int MainMenu::getUserOption(){
 }
 
 void MainMenu::processUserChoice(int userChoice, bool &repeat){
-    switch(userChoice){
-        case 1: 
-            cout << "Time to login" << endl;
+    try{
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        switch (userChoice)
+        {
+        case 1:
             login();
             break;
-        case 2: 
-            cout << "Create account" << endl;
+        case 2:
             createAccount();
             break;
         case 3:
-            cout << "Goodbye" << endl;
+            exitApplication();
+            repeat = false; // Stop repeating the menu
             break;
         default:
-            cout << "Invalid entry" << endl;
+            std::cout << "Invalid entry. Please select a valid option." << std::endl;
             break;
+        }
+    } catch(invalid_argument& e){
+        cout << "Error: " << e.what() << endl;
+    } catch(exception& e){
+        cout << "An unexpected error occurred: " << e.what() << endl;
     }
 }
 
@@ -96,5 +109,10 @@ void MainMenu::createAccount(){
         cout << "Account created successfully" << endl;
         userManager.saveUsers();
     }
+}
+
+void MainMenu::exitApplication(){
+    userManager.saveUsers();
+    exit(0);
 }
     

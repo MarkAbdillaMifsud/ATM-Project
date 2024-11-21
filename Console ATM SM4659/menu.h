@@ -8,7 +8,7 @@ class MainMenu{
         void processUserChoice(int userChoice, bool &repeat);
         int getUserOption();
         void displayMenu();
-    
+        void exitApplication();
     private:
         UserManager userManager;
         void createAccount();

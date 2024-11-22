@@ -25,6 +25,7 @@ bool UserManager::login(const string& username, const string& password){
     auto it = users.find(username);
     if(it != users.end() && it->second.getPassword() == password){
         loggedInUser = &(it->second);
+        return true;
     }
     return false;
 }
@@ -54,4 +55,12 @@ void UserManager::loadUsers(){
     } catch(const exception& e){
         cerr << "Error loading user data: " << e.what() << endl;
     }
+}
+
+User* UserManager::getLoggedInUser() const {
+    return loggedInUser;
+}
+
+void UserManager::logout(){
+    loggedInUser = nullptr;
 }

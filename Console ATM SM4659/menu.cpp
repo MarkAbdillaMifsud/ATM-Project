@@ -13,7 +13,7 @@ void MainMenu::init(){
     userManager.loadUsers();
 }
 
-void MainMenu::displayMenu(){
+void MainMenu::displayMainMenu(){
     cout << "***********************************" << endl;
     cout << "Welcome to user's ATM" << endl;
     cout << "***********************************" << endl;
@@ -34,7 +34,7 @@ int MainMenu::getUserOption(){
     return userOption;
 }
 
-void MainMenu::processUserChoice(int userChoice, bool &repeat){
+void MainMenu::processMainMenuChoice(int userChoice, bool &repeat){
     try{
         if(cin.fail()){
             cin.clear();
@@ -73,7 +73,7 @@ void MainMenu::login(){
 
     if(userManager.login(username, password)){
         cout << "Login successful. Welcome, " << username << ". \n";
-        //Send user to account menu
+        applicationMenu();
     } else {
         cout << "Login unsuccessful. Please try again" << endl;
     }
@@ -119,4 +119,72 @@ void MainMenu::exitApplication(){
     userManager.saveUsers();
     exit(0);
 }
-    
+
+void MainMenu::displayApplicationMenu()
+{
+    cout << "===================================" << endl;
+    User* user = userManager.getLoggedInUser();
+    if(user != nullptr){
+        cout << "Welcome " << user->getUsername() << endl;
+    } else {
+        cout << "Welcome username" << endl;
+    }
+    cout << "===================================" << endl;
+    cout << "1) Withdraw money" << endl;
+    cout << "2) Deposit money" << endl;
+    cout << "3) Request balance" << endl;
+    cout << "4) Create bank account" << endl;
+    cout << "5) Transfer money between accounts" << endl;
+    cout << "6) Logout" << endl;
+    cout << "===================================" << endl;
+    cout << "Enter your choice: " << endl;
+}
+
+void MainMenu::applicationMenu(){
+    bool repeat = true;
+    while(repeat){
+        displayApplicationMenu();
+        int userChoice = getUserOption();
+        processApplicationMenuChoice(userChoice, repeat);
+    }
+}
+
+void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
+    try{
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        switch(userChoice){
+            case 1:
+                cout << "Withdraw money" << endl;
+                break;
+            case 2:
+                cout << "Deposit money" << endl;
+                break;
+            case 3:
+                cout << "Display Balance" << endl;
+                break;
+            case 4:
+                cout << "Create bank account" << endl;
+                break;
+            case 5:
+                cout << "Transfer money" << endl;
+                break;
+            case 6:
+                logout();
+                repeat = false;
+                break;
+            default:
+                cout << "Invalid entry. Please select a valid option" << endl;
+                break;
+        }
+    } catch(const exception& e){
+        cout << "An unexpected error occurred: " << e.what() << endl;
+    }
+}
+
+void MainMenu::logout(){
+    userManager.logout();
+    cout << "You have logged out of your account. " << endl;
+}

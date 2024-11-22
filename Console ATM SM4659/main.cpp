@@ -5,11 +5,12 @@ using namespace std;
 
 int main(){
     MainMenu mainMenu{};
+    mainMenu.init();
     bool repeat = true;
     while(repeat){
-        mainMenu.displayMenu();
+        mainMenu.displayMainMenu();
         int userChoice = mainMenu.getUserOption();
-        mainMenu.processUserChoice(userChoice, repeat);
+        mainMenu.processMainMenuChoice(userChoice, repeat);
     }
     return 0;
 }

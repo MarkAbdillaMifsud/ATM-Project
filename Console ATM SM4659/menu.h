@@ -5,13 +5,17 @@ class MainMenu{
     public:
         MainMenu();
         void init();
-        void processUserChoice(int userChoice, bool &repeat);
+        void processMainMenuChoice(int userChoice, bool &repeat);
         int getUserOption();
-        void displayMenu();
+        void displayMainMenu();
+        void displayApplicationMenu();
         void exitApplication();
     private:
         UserManager userManager;
         void createAccount();
         void login();
+        void logout();
+        void applicationMenu();
+        void processApplicationMenuChoice(int choice, bool &repeat);
         int userOption;
 };

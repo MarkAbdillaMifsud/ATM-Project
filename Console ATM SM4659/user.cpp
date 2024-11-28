@@ -51,3 +51,7 @@ BankAccount* User::getBankAccount(int accountNumber){
     cerr << "An account with account number: " << accountNumber << " does not exist." << endl;
     return nullptr;
 }
+
+unordered_map<int, shared_ptr<BankAccount>> User::getAllBankAccounts() const {
+    return bankAccounts;
+}

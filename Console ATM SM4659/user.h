@@ -15,7 +15,7 @@ class User{
         void addBankAccount(std::shared_ptr<BankAccount> account);
         void removeBankAccount(int accountNumber);
         BankAccount* getBankAccount(int accountNumber);
-        std::unordered_map<std::string, std::shared_ptr<BankAccount>> getAllBankAccounts() const;
+        std::unordered_map<int, std::shared_ptr<BankAccount>> getAllBankAccounts() const;
 
     private:
         std::string username;

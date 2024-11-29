@@ -1,5 +1,6 @@
 #pragma once
 #include "userManager.h"
+#include "BankAccountManager.h"
 
 class MainMenu{
     public:
@@ -12,10 +13,12 @@ class MainMenu{
         void exitApplication();
     private:
         UserManager userManager;
+        BankAccountManager bankAccountManager;
         void createAccount();
         void login();
         void logout();
         void applicationMenu();
         void processApplicationMenuChoice(int choice, bool &repeat);
+        void createBankAccount();
         int userOption;
 };

@@ -39,6 +39,10 @@ bool UserManager::validatePassword(const string& password){
 }
 
 void UserManager::saveUsers(){
+    static int saveCallCount = 0;
+    saveCallCount++;
+    cout << "saveUsers() called " << saveCallCount << " times." << endl;
+    
     try{
         FileHandler::saveToCSV(users, "userAccounts.csv");
         cout << "User data saved successfully" << endl;

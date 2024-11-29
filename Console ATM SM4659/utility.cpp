@@ -1,5 +1,6 @@
 #include <cctype>
 #include <string>
+#include <algorithm>
 #include "utility.h"
 
 using namespace std;
@@ -19,4 +20,14 @@ bool Utility::isValidPassword(const string& password){
         }
     }
     return hasNumber && hasSymbol;
+}
+
+bool Utility::isValidAccountType(string accountType)
+{
+    transform(accountType.begin(), accountType.end(), accountType.begin(),[](unsigned char c)
+    {
+        return tolower(c);
+    });
+
+    return accountType == "savings" || accountType == "current";
 }

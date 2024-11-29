@@ -20,7 +20,13 @@ void FileHandler::loadFromCSV(unordered_map<string, User> &users, const string &
     }
 
     string line;
+    bool isFirstLine = true;
+
     while(getline(file, line)){
+        if(isFirstLine){ //skip header row
+            isFirstLine = false;
+            continue;
+        }
         istringstream ss(line);
         string username, password;
         if(getline(ss, username, ',') && getline(ss, password)){
@@ -33,7 +39,7 @@ void FileHandler::loadFromCSV(unordered_map<string, User> &users, const string &
 }
 
 void FileHandler::saveToCSV(const unordered_map<string, User>& users, const string& filename){
-    ofstream file(filename);
+    ofstream file(filename, ios::out | ios::trunc);
 
     if (!file.is_open())
     {
@@ -41,9 +47,16 @@ void FileHandler::saveToCSV(const unordered_map<string, User>& users, const stri
         return;
     }
 
-    file << "Username,Password,AccountType,AccountNumber,Balance\n";
+    // Write the header only once
+    static bool headerWritten = false; // Track if header has been written
+    if (!headerWritten)
+    {
+        file << "Username,Password,AccountType,AccountNumber,Balance\n";
+        headerWritten = true; // Mark header as written
+    }
 
-    if (file.fail()) {
+    if (file.fail())
+    {
         cerr << "Error writing header to file: " << filename << endl;
         file.close();
         return;

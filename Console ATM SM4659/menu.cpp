@@ -2,8 +2,14 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <limits>
+#include <cctype>
+#include <string>
 #include "menu.h"
 #include "userManager.h"
+#include "utility.h"
+#include "BankAccount.h"
+#include "SavingsAccount.h"
+#include "CurrentAccount.h"
 
 using namespace std;
 
@@ -111,7 +117,7 @@ void MainMenu::createAccount(){
 
     if(userManager.createUser(username, password)){
         cout << "Account created successfully" << endl;
-        userManager.saveUsers();
+        //userManager.saveUsers();
     }
 }
 
@@ -167,6 +173,7 @@ void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
                 break;
             case 4:
                 cout << "Create bank account" << endl;
+                createBankAccount();
                 break;
             case 5:
                 cout << "Transfer money" << endl;
@@ -182,6 +189,63 @@ void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
     } catch(const exception& e){
         cout << "An unexpected error occurred: " << e.what() << endl;
     }
+}
+
+void MainMenu::createBankAccount(){
+    string accountNumberEntry;
+    int bankAccountNumber;
+    string accountType;
+    bool isValidAccountNumber = false;
+
+    cout << "Select the type of account you want to create: Savings or Current" << endl;
+    do{
+        cin >> accountType;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        if(!Utility::isValidAccountType(accountType)){
+            cout << accountType << " is not a valid account. Enter Savings or Current" << endl;
+        }
+    } while(!Utility::isValidAccountType(accountType));  
+
+    cout << "Enter an account number for your new bank account: " << endl;
+    do{
+        try
+        {
+            cin >> accountNumberEntry;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            bankAccountNumber = stoi(accountNumberEntry); // Attempt conversion
+            if (!bankAccountManager.isUniqueAccountNumber(bankAccountNumber))
+            {
+                cout << bankAccountNumber << " already belongs to another bank account. Please enter a unique account number." << endl;
+            }
+            else
+            {
+                cout << "Account number: " << bankAccountNumber << " is valid!" << endl;
+                isValidAccountNumber = true;
+            }
+        }
+        catch (const std::invalid_argument &)
+        {
+            cout << "Invalid account number. Please enter a valid integer." << endl;
+        }
+        catch (const std::out_of_range &)
+        {
+            cout << "Account number is out of range. Please try again." << endl;
+        }
+    } while(!isValidAccountNumber);
+
+    shared_ptr<BankAccount> newAccount;
+
+    if(accountType == "savings"){
+        newAccount = make_shared<SavingsAccount>(bankAccountNumber);
+    } else if(accountType == "current"){
+        newAccount = make_shared<CurrentAccount>(bankAccountNumber);
+    }
+
+    userManager.getLoggedInUser()->addBankAccount(newAccount);
+
+    cout << "Account with account number " << bankAccountNumber << " successfully created" << endl;
 }
 
 void MainMenu::logout(){

@@ -169,9 +169,11 @@ void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
                 break;
             case 2:
                 cout << "Deposit money" << endl;
+                depositMoney();
                 break;
             case 3:
                 cout << "Display Balance" << endl;
+                showBalances();
                 break;
             case 4:
                 cout << "Create bank account" << endl;
@@ -261,6 +263,42 @@ void MainMenu::withdrawMoney(){
     if(userManager.getLoggedInUser()->isZeroBankAccounts()){
         cout << "There are no bank accounts registered on this user. Please create one first." << endl;
         return;
+    }
+}
+
+void MainMenu::depositMoney(){
+    if (userManager.getLoggedInUser()->isZeroBankAccounts()){
+        cout << "There are no bank accounts registered on this user. Please create one first." << endl;
+        return;
+    }
+}
+
+void MainMenu::showBalances(){
+    if (userManager.getLoggedInUser()->isZeroBankAccounts()) {
+        cout << "There are no bank accounts registered on this user. Please create one first." << endl;
+        return;
+    }
+
+    User* loggedInUser = userManager.getLoggedInUser();
+    const auto& bankAccounts = loggedInUser->getAllBankAccounts();
+
+    cout << "Account Details:" << endl;
+    cout << "================" << endl;
+
+    for(const auto& accountPair : bankAccounts){
+        auto account = accountPair.second;
+
+        string accountType = "Bank Account";
+        if(dynamic_cast<SavingsAccount*>(account.get())){
+            accountType = "Savings Account";
+        } else if (dynamic_cast<CurrentAccount*>(account.get())){
+            accountType = "Current Account";
+        }
+
+        cout << "Account Number: " << account->getAccountNumber() << endl;
+        cout << "Account Type: " << accountType << endl;
+        cout << "Balance: EUR " << account->getBalance() << endl;
+        cout << "-------------------------" << endl;
     }
 }
 

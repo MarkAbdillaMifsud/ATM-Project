@@ -28,9 +28,30 @@ void FileHandler::loadFromCSV(unordered_map<string, User> &users, const string &
             continue;
         }
         istringstream ss(line);
-        string username, password;
-        if(getline(ss, username, ',') && getline(ss, password)){
-            users.emplace(username, User(username, password));
+        string username, password, accountType, accountNumberStr, balanceStr;
+        if(getline(ss, username, ',') && getline(ss, password, ',')){
+            if(users.find(username) == users.end()){
+                users.emplace(username, User(username, password));
+            }
+
+            User &user = users.at(username);
+
+            while(getline(ss, accountType, ',') && getline(ss, accountNumberStr, ',') && getline(ss, balanceStr, ',')){
+                int accountNumber = stoi(accountNumberStr);
+                float balance = stof(balanceStr);
+
+                shared_ptr<BankAccount> account;
+                if (accountType == "SavingsAccount") {
+                    account = make_shared<SavingsAccount>(accountNumber);
+                } else if (accountType == "CurrentAccount") {
+                    account = make_shared<CurrentAccount>(accountNumber);
+                } else {
+                    account = make_shared<BankAccount>(accountNumber);
+                }
+
+                account->setBalance(balance);
+                user.addBankAccount(account);
+            }
         } else {
             cerr << "Error parsing line: " << line << endl;
         }

@@ -55,3 +55,7 @@ BankAccount* User::getBankAccount(int accountNumber){
 unordered_map<int, shared_ptr<BankAccount>> User::getAllBankAccounts() const {
     return bankAccounts;
 }
+
+bool User::isZeroBankAccounts(){
+    return getAllBankAccounts().empty();
+}

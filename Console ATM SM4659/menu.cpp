@@ -66,6 +66,7 @@ void MainMenu::processMainMenuChoice(int userChoice, bool &repeat){
         cout << "Error: " << e.what() << endl;
     } catch(exception& e){
         cout << "An unexpected error occurred: " << e.what() << endl;
+        repeat = true; //Allows return to menu in case of failure
     }
 }
 
@@ -164,6 +165,7 @@ void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
         switch(userChoice){
             case 1:
                 cout << "Withdraw money" << endl;
+                withdrawMoney();
                 break;
             case 2:
                 cout << "Deposit money" << endl;
@@ -186,8 +188,11 @@ void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
                 cout << "Invalid entry. Please select a valid option" << endl;
                 break;
         }
-    } catch(const exception& e){
+    } catch (invalid_argument &e) {
+        cout << "Error: " << e.what() << endl;
+    } catch (exception &e) {
         cout << "An unexpected error occurred: " << e.what() << endl;
+        repeat = true; // Allows return to menu in case of failure
     }
 }
 
@@ -200,8 +205,6 @@ void MainMenu::createBankAccount(){
     cout << "Select the type of account you want to create: Savings or Current" << endl;
     do{
         cin >> accountType;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         if(!Utility::isValidAccountType(accountType)){
             cout << accountType << " is not a valid account. Enter Savings or Current" << endl;
         }
@@ -212,8 +215,6 @@ void MainMenu::createBankAccount(){
         try
         {
             cin >> accountNumberEntry;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             bankAccountNumber = stoi(accountNumberEntry); // Attempt conversion
             if (!bankAccountManager.isUniqueAccountNumber(bankAccountNumber))
             {
@@ -225,27 +226,42 @@ void MainMenu::createBankAccount(){
                 isValidAccountNumber = true;
             }
         }
-        catch (const std::invalid_argument &)
-        {
+        catch (const std::invalid_argument &) {
+            cin.clear(); // Clear the error state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Invalid account number. Please enter a valid integer." << endl;
         }
-        catch (const std::out_of_range &)
-        {
+        catch (const std::out_of_range &) {
+            cin.clear(); // Clear the error state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Account number is out of range. Please try again." << endl;
         }
     } while(!isValidAccountNumber);
 
     shared_ptr<BankAccount> newAccount;
 
-    if(accountType == "savings"){
-        newAccount = make_shared<SavingsAccount>(bankAccountNumber);
-    } else if(accountType == "current"){
-        newAccount = make_shared<CurrentAccount>(bankAccountNumber);
+    if (Utility::isValidAccountType(accountType)) {
+        if (accountType == "savings") {
+            newAccount = make_shared<SavingsAccount>(bankAccountNumber);
+        } else {
+            newAccount = make_shared<CurrentAccount>(bankAccountNumber);
+        }
+    } else {
+        cout << "Error: Invalid account type detected unexpectedly. Please retry." << endl;
+        return;
     }
 
     userManager.getLoggedInUser()->addBankAccount(newAccount);
 
     cout << "Account with account number " << bankAccountNumber << " successfully created" << endl;
+    return;
+}
+
+void MainMenu::withdrawMoney(){
+    if(userManager.getLoggedInUser()->isZeroBankAccounts()){
+        cout << "There are no bank accounts registered on this user. Please create one first." << endl;
+        return;
+    }
 }
 
 void MainMenu::logout(){

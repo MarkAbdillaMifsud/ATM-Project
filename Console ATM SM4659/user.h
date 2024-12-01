@@ -16,6 +16,7 @@ class User{
         void removeBankAccount(int accountNumber);
         BankAccount* getBankAccount(int accountNumber);
         std::unordered_map<int, std::shared_ptr<BankAccount>> getAllBankAccounts() const;
+        bool isZeroBankAccounts();
 
     private:
         std::string username;

@@ -20,5 +20,8 @@ class MainMenu{
         void applicationMenu();
         void processApplicationMenuChoice(int choice, bool &repeat);
         void createBankAccount();
+        void withdrawMoney();
+        void depositMoney();
+        void showBalances();
         int userOption;
 };

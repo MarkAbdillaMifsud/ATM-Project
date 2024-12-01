@@ -267,10 +267,52 @@ void MainMenu::withdrawMoney(){
 }
 
 void MainMenu::depositMoney(){
-    if (userManager.getLoggedInUser()->isZeroBankAccounts()){
+    int accountNumber;
+    float depositAmount;
+    shared_ptr<BankAccount> selectedAccount;
+
+    User *loggedInUser = userManager.getLoggedInUser();
+    if (loggedInUser->isZeroBankAccounts()){
         cout << "There are no bank accounts registered on this user. Please create one first." << endl;
         return;
     }
+
+    const auto &bankAccounts = loggedInUser->getAllBankAccounts();
+
+    if (bankAccounts.size() == 1) {
+        const auto &accountPair = *bankAccounts.begin();
+        accountNumber = accountPair.first;
+        selectedAccount = accountPair.second;
+
+        cout << "Single bank account detected with account number: " << accountNumber << endl;
+    } else {
+        cout << "You have multiple accounts. Please enter the number of the account you wish to deposit into:" << endl;
+        for (const auto &accountPair : bankAccounts)
+        {
+            cout << "Account Number: " << accountPair.first
+                 << ", Balance: EUR " << accountPair.second->getBalance() << endl;
+        }
+        cout << "Enter the account number: ";
+        while (!(cin >> accountNumber) || bankAccounts.find(accountNumber) == bankAccounts.end()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid account number. Please select a valid account: ";
+        }
+
+        selectedAccount = bankAccounts.at(accountNumber);
+    }
+
+    // Prompt for deposit amount
+    cout << "Enter the amount to deposit: ";
+    while (!(cin >> depositAmount) || depositAmount <= 0) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid amount. Please enter a positive number: ";
+    }
+    
+    selectedAccount->depositMoney(depositAmount);
+    cout << "You have deposited EUR " << depositAmount << " to account number " << accountNumber << endl;
+    cout << "Updated Balance: EUR " << selectedAccount->getBalance() << endl;
 }
 
 void MainMenu::showBalances(){

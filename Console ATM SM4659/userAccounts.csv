@@ -1,6 +1,6 @@
 Username,Password,AccountType,AccountNumber,Balance
-Grimoire,MhuxAffarik24!,CurrentAccount,99087,500
-MarkTestAccount2,Tester56Po!,SavingsAccount,77543,3.56342e+21
-MarkIsTheBest,MarkIsTheBest6!,SavingsAccount,543987,0
+MarkTest,Tester1224455!,CurrentAccount,7809,-60,CurrentAccount,55321,0,SavingsAccount,89076,2300
 MarkTestAccount1,TestAccount67"!,CurrentAccount,880954,6.42444e-07
-MarkTest,Tester1224455!,SavingsAccount,89076,2300,CurrentAccount,55321,0,CurrentAccount,7809,0
+MarkIsTheBest,MarkIsTheBest6!,SavingsAccount,543987,0
+MarkTestAccount2,Tester56Po!,SavingsAccount,77543,3.56342e+21
+Grimoire,MhuxAffarik24!,CurrentAccount,99087,-550

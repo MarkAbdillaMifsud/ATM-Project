@@ -11,7 +11,16 @@ void CurrentAccount::withdrawMoney(float amount){
         cerr << "Withdrawal amount must be positive." << endl;
         return;
     }
-    setBalance(getBalance() - amount);
+
+    float currentBalance = getBalance();
+
+    if(currentBalance >= amount){
+        setBalance(currentBalance - amount);
+    } else {
+        float overdraft = amount - currentBalance;
+        float penalty = overdraft * getDepositFee();
+        setBalance(currentBalance - amount - penalty);
+    }
 }
 
 bool CurrentAccount::isBalanceNegative(){
@@ -20,14 +29,11 @@ bool CurrentAccount::isBalanceNegative(){
 
 void CurrentAccount::depositMoney(float amount){
     if (amount <= 0) {
-        cerr << "Withdrawal amount must be positive." << endl;
+        cerr << "Deposit amount must be positive." << endl;
         return;
     }
-    if(!isBalanceNegative()){
-        setBalance(getBalance() + amount);
-    } else {
-        setBalance((amount * (1.0f + getDepositFee())) + getBalance());
-    }
+
+    setBalance(getBalance() + amount);
 }
 
 float CurrentAccount::getDepositFee() const {

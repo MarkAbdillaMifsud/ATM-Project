@@ -44,7 +44,8 @@ void UserManager::saveUsers(){
     cout << "saveUsers() called " << saveCallCount << " times." << endl;
     
     try{
-        FileHandler::saveToCSV(users, "userAccounts.csv");
+        FileHandler::saveUsersToCSV(users, "users.csv");
+        FileHandler::saveAccountsToCSV(users, "bankAccounts.csv");
         cout << "User data saved successfully" << endl;
     } catch (const exception& e){
         cerr << "Error saving user data: " << e.what() << endl;
@@ -54,7 +55,8 @@ void UserManager::saveUsers(){
 void UserManager::loadUsers(){
     try{
         users.clear();
-        FileHandler::loadFromCSV(users, "userAccounts.csv");
+        FileHandler::loadUsersFromCSV(users, "users.csv");
+        FileHandler::loadAccountsFromCSV(users, "bankAccounts.csv");
         cout << "User data loaded successfully" << endl;
     } catch(const exception& e){
         cerr << "Error loading user data: " << e.what() << endl;

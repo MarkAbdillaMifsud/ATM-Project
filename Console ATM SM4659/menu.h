@@ -23,5 +23,6 @@ class MainMenu{
         void withdrawMoney();
         void depositMoney();
         void showBalances();
+        void transferMoney();
         int userOption;
 };

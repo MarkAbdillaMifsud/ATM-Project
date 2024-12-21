@@ -181,6 +181,7 @@ void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
                 break;
             case 5:
                 cout << "Transfer money" << endl;
+                transferMoney();
                 break;
             case 6:
                 logout();
@@ -382,6 +383,65 @@ void MainMenu::showBalances(){
         cout << "Account Type: " << accountType << endl;
         cout << "Balance: EUR " << account->getBalance() << endl;
         cout << "-------------------------" << endl;
+    }
+}
+
+void MainMenu::transferMoney(){
+    int fromAccountNumber, toAccountNumber;
+    float transferAmount;
+    shared_ptr<BankAccount> fromAccount, toAccount;
+
+    User* loggedInUser = userManager.getLoggedInUser();
+    const auto &bankAccounts = loggedInUser->getAllBankAccounts();
+
+    if(bankAccounts.size() < 2){
+        cout << "This user has " << bankAccounts.size() << "bank accounts. At least 2 bank accounts are required to initiate a transfer." << endl;
+        return;
+    }
+
+    cout << "Your accounts:" << endl;
+    for (const auto &accountPair : bankAccounts) {
+        cout << "Account Number: " << accountPair.first
+             << ", Balance: EUR " << accountPair.second->getBalance() << endl;
+    }
+
+    cout << "Enter the account number to transfer funds FROM: ";
+    while (!(cin >> fromAccountNumber) || bankAccounts.find(fromAccountNumber) == bankAccounts.end()) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid account number. Please try again: ";
+    }
+    fromAccount = bankAccounts.at(fromAccountNumber);
+
+    cout << "Enter the account number to transfer funds TO: ";
+    while (!(cin >> toAccountNumber) || bankAccounts.find(toAccountNumber) == bankAccounts.end() || toAccountNumber == fromAccountNumber) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        if (toAccountNumber == fromAccountNumber) {
+            cout << "Source and destination accounts cannot be the same. Try again: ";
+        } else {
+            cout << "Invalid account number. Please try again: ";
+        }
+    }
+    toAccount = bankAccounts.at(toAccountNumber);
+
+    cout << "Enter the amount to transfer: ";
+    while (!(cin >> transferAmount) || transferAmount <= 0) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid amount. Please enter a positive value: ";
+    }
+
+    try {
+        fromAccount->withdrawMoney(transferAmount);
+        toAccount->depositMoney(transferAmount);
+
+        cout << "Transfer of EUR " << transferAmount << " from Account " << fromAccountNumber
+             << " to Account " << toAccountNumber << " completed successfully." << endl;
+        cout << "Updated Balance for Account " << fromAccountNumber << ": EUR " << fromAccount->getBalance() << endl;
+        cout << "Updated Balance for Account " << toAccountNumber << ": EUR " << toAccount->getBalance() << endl;
+    } catch (const exception& e) {
+        cout << "Transfer failed: " << e.what() << endl;
     }
 }
 

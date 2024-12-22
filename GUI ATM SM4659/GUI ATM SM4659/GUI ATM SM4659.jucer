@@ -4,6 +4,30 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="npyuTp" name="GUI ATM SM4659">
     <GROUP id="{1AB5207D-25A7-9F11-4953-86DAE1057E8E}" name="Source">
+      <FILE id="imxcaT" name="fileHandler.cpp" compile="1" resource="0" file="Source/fileHandler.cpp"/>
+      <FILE id="XChESI" name="fileHandler.h" compile="0" resource="0" file="Source/fileHandler.h"/>
+      <FILE id="lUCcJd" name="menu.cpp" compile="1" resource="0" file="Source/menu.cpp"/>
+      <FILE id="iR3QGG" name="menu.h" compile="0" resource="0" file="Source/menu.h"/>
+      <FILE id="Afvfyo" name="SavingsAccount.cpp" compile="1" resource="0"
+            file="Source/SavingsAccount.cpp"/>
+      <FILE id="Hexbg4" name="SavingsAccount.h" compile="0" resource="0"
+            file="Source/SavingsAccount.h"/>
+      <FILE id="HbzmXf" name="user.cpp" compile="1" resource="0" file="Source/user.cpp"/>
+      <FILE id="vfGHuI" name="user.h" compile="0" resource="0" file="Source/user.h"/>
+      <FILE id="eEddke" name="userManager.cpp" compile="1" resource="0" file="Source/userManager.cpp"/>
+      <FILE id="R5jN54" name="userManager.h" compile="0" resource="0" file="Source/userManager.h"/>
+      <FILE id="z4g5q4" name="utility.cpp" compile="1" resource="0" file="Source/utility.cpp"/>
+      <FILE id="CzmEtU" name="utility.h" compile="0" resource="0" file="Source/utility.h"/>
+      <FILE id="cDuBld" name="BankAccount.cpp" compile="1" resource="0" file="Source/BankAccount.cpp"/>
+      <FILE id="gJQPNf" name="BankAccount.h" compile="0" resource="0" file="Source/BankAccount.h"/>
+      <FILE id="XVVcIN" name="BankAccountManager.cpp" compile="1" resource="0"
+            file="Source/BankAccountManager.cpp"/>
+      <FILE id="MNFn93" name="BankAccountManager.h" compile="0" resource="0"
+            file="Source/BankAccountManager.h"/>
+      <FILE id="Jb4n6N" name="CurrentAccount.cpp" compile="1" resource="0"
+            file="Source/CurrentAccount.cpp"/>
+      <FILE id="qhBPtN" name="CurrentAccount.h" compile="0" resource="0"
+            file="Source/CurrentAccount.h"/>
       <FILE id="tLPJO9" name="AccountCreationComponent.cpp" compile="1" resource="0"
             file="Source/AccountCreationComponent.cpp"/>
       <FILE id="aIRbz6" name="AccountCreationComponent.h" compile="0" resource="0"

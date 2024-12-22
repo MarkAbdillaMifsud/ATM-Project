@@ -17,15 +17,14 @@ AccountCreationComponent::AccountCreationComponent(ParentComponent& parent) : pa
     passwordLabel.setText("Password:", juce::dontSendNotification);
     addAndMakeVisible(passwordLabel);
     passwordTextBox.setPasswordCharacter('*');
-    addAndMakeVisible(passwordTextBox);
-    DBG("Password Text Box added to the component hierarchy.");
+    addAndMakeVisible(passwordTextBox); // Ensure this is correct
 
     // Confirm Password Field
     confirmPasswordLabel.setText("Confirm Password:", juce::dontSendNotification);
     addAndMakeVisible(confirmPasswordLabel);
     confirmPasswordTextBox.setPasswordCharacter('*');
-    addAndMakeVisible(confirmPasswordTextBox);
-    DBG("Confirm Password Text Box added to the component hierarchy.");
+    addAndMakeVisible(confirmPasswordTextBox); // Ensure this is correct
+
 
     // Buttons
     createAccountButton.setButtonText("Create Account");
@@ -46,24 +45,26 @@ void AccountCreationComponent::paint(juce::Graphics& g)
     g.fillAll(juce::Colours::lightgrey);
 }
 
-void AccountCreationComponent::resized() {
+void AccountCreationComponent::resized()
+{
     auto area = getLocalBounds().reduced(20);
 
     auto headerArea = area.removeFromTop(40);
     titleLabel.setBounds(headerArea);
 
-    auto fieldArea = area.removeFromTop(120);
+    auto fieldArea = area.removeFromTop(150); // Ensure enough height is reserved for fields
     usernameLabel.setBounds(fieldArea.removeFromTop(25));
     usernameTextBox.setBounds(fieldArea.removeFromTop(25).reduced(10, 0));
     passwordLabel.setBounds(fieldArea.removeFromTop(25));
     passwordTextBox.setBounds(fieldArea.removeFromTop(25).reduced(10, 0));
-    confirmPasswordLabel.setBounds(fieldArea.removeFromTop(25)); // Confirm Password Label
-    confirmPasswordTextBox.setBounds(fieldArea.removeFromTop(25).reduced(10, 0)); // Confirm Password Text Field
+    confirmPasswordLabel.setBounds(fieldArea.removeFromTop(25));
+    confirmPasswordTextBox.setBounds(fieldArea.removeFromTop(25).reduced(10, 0)); // Ensure height > 0
 
     auto buttonArea = area.removeFromBottom(80);
     createAccountButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
     backButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
 }
+
 
 
 void AccountCreationComponent::buttonClicked(juce::Button* button)

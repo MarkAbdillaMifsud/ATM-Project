@@ -2,7 +2,7 @@
 #include "ParentComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent(ParentComponent& parent) : parentComponent(parent) {
+MainComponent::MainComponent(ParentComponent& parent, UserManager& userManager) : parentComponent(parent), userManager(userManager) {
     titleLabel.setText("Welcome to ATM", juce::dontSendNotification);
     titleLabel.setJustificationType(juce::Justification::centred);
     titleLabel.setFont(juce::Font(24.0f, juce::Font::bold));
@@ -66,10 +66,23 @@ void MainComponent::buttonClicked(juce::Button* button)
         {
             juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
                 "Login Failed", "Please fill in all fields.");
+            return;
         }
-        else
-        {
-            // Logic to validate user credentials
+        
+        if (userManager.login(username.toStdString(), password.toStdString())) {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::InfoIcon,
+                "Success",
+                "Login Successful!"
+            );
+            parentComponent.showAccountManagementScreen();
+        }
+        else {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "Error",
+                "Invalid username or password."
+            );
         }
     }
     else if (button == &createAccountButton)

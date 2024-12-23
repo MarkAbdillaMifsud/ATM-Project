@@ -4,6 +4,10 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="npyuTp" name="GUI ATM SM4659">
     <GROUP id="{1AB5207D-25A7-9F11-4953-86DAE1057E8E}" name="Source">
+      <FILE id="iXWkU5" name="AccountManagementComponent.cpp" compile="1"
+            resource="0" file="Source/AccountManagementComponent.cpp"/>
+      <FILE id="ktHa47" name="AccountManagementComponent.h" compile="0" resource="0"
+            file="Source/AccountManagementComponent.h"/>
       <FILE id="imxcaT" name="fileHandler.cpp" compile="1" resource="0" file="Source/fileHandler.cpp"/>
       <FILE id="XChESI" name="fileHandler.h" compile="0" resource="0" file="Source/fileHandler.h"/>
       <FILE id="lUCcJd" name="menu.cpp" compile="1" resource="0" file="Source/menu.cpp"/>

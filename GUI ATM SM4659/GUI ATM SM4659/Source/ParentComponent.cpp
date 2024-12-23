@@ -1,16 +1,20 @@
 #include "ParentComponent.h"
 #include "MainComponent.h"
 #include "AccountCreationComponent.h"
+#include "AccountManagementComponent.h"
 
 
 ParentComponent::ParentComponent() : userManager()
 {
     // Initialize MainComponent
-    mainComponent = std::make_unique<MainComponent>(*this);
+    mainComponent = std::make_unique<MainComponent>(*this, userManager);
     addAndMakeVisible(*mainComponent);
 
     // AccountCreationComponent will be created when needed
     accountCreationComponent = nullptr;
+
+    //AccountManagementComponent will be created when needed
+    accountManagementComponent = nullptr;
 
     setSize(400, 300);
 }
@@ -40,7 +44,7 @@ void ParentComponent::showMainScreen()
 
     if (!mainComponent)
     {
-        mainComponent = std::make_unique<MainComponent>(*this);
+        mainComponent = std::make_unique<MainComponent>(*this, userManager);
         addAndMakeVisible(*mainComponent);
     }
 }
@@ -58,4 +62,18 @@ void ParentComponent::showAccountCreationScreen()
         accountCreationComponent = std::make_unique<AccountCreationComponent>(*this, userManager);
         addAndMakeVisible(*accountCreationComponent);
     }
+}
+
+void ParentComponent::showAccountManagementScreen() {
+    if (mainComponent) {
+        removeChildComponent(mainComponent.get());
+        mainComponent.reset();
+    }
+
+    if (!accountCreationComponent) {
+        accountManagementComponent = std::make_unique<AccountManagementComponent>(*this, userManager);
+        addAndMakeVisible(*accountManagementComponent);
+    }
+
+    accountManagementComponent->setBounds(getLocalBounds());
 }

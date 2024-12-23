@@ -6,6 +6,7 @@
 
 class MainComponent;
 class AccountCreationComponent;
+class AccountManagementComponent;
 
 class ParentComponent : public juce::Component
 {
@@ -18,10 +19,12 @@ public:
 
     void showMainScreen();
     void showAccountCreationScreen();
+    void showAccountManagementScreen();
 
 private:
     std::unique_ptr<MainComponent> mainComponent;
     std::unique_ptr<AccountCreationComponent> accountCreationComponent;
+    std::unique_ptr<AccountManagementComponent> accountManagementComponent;
 
     UserManager userManager;
 

@@ -1,46 +1,54 @@
+# macOS and OS-level cruft
 ._*
+.DS_Store
+
+# Xcode
 *.mode1v3
 *.pbxuser
 *.perspectivev3
-*.user
-*.ncb
-*.suo
-*.ilk
-*.pch
-*.pdb
-*.dep
-*.idb
-*.manifest
-*.manifest.res
-*.o
-*.d
-*.sdf
-*.opensdf
-*.VC.db
-*.VC.opendb
 xcuserdata
 *.xccheckout
 *.xcscmblueprint
 *.xcscheme
 contents.xcworkspacedata
-.DS_Store
-.svn
-.deps
-.dirstamp
-profile
 **/MacOSX/build
 **/iOS/build
 **/IDEWorkspaceChecks.plist
-**/Linux/build
-**/LinuxMakefile/build
+
+# Visual Studio / Windows
+*.suo
+*.user
+*.vcxproj.user
+*.ncb
+*.ilk
+*.pch
+*.pdb
+*.dep
+*.idb
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.opendb
+**/.vs/            # entire .vs folder (includes ipch subdirs and db files)
+*.db               # covers e.g. Browse.VC.db
+*.ipch             # IntelliSense precompiled headers
+
+# Additional Visual Studio build folders
 **/VisualStudio[0-9]*/Win32
 **/VisualStudio[0-9]*/x64
 **/Builds/x64
-**/.vs
+
+# CodeBlocks
 **/CodeBlocks/bin
 **/CodeBlocks/obj
 **/CodeBlocks/*.depend
 **/CodeBlocks/*.layout
+
+# Linux
+**/Linux/build
+**/LinuxMakefile/build
+
+# Android Studio
 **/Builds/Android/.gradle
 **/Builds/Android/.idea
 **/Builds/Android/build
@@ -51,27 +59,39 @@ profile
 **/Builds/Android/app/.cxx
 **/Builds/Android/lib/build
 **/Builds/Android/lib/.externalNativeBuild
+
+# macOS intermediate files
 **/Builds/MacOSX/**/Index
 **/Builds/MacOSX/**/Intermediates.noindex
+
+# Doxygen
 **/doxygen/doc
 **/doxygen/build
+
+# Common or leftover patterns
+.svn
+.deps
+.dirstamp
+profile
+**/IDEWorkspaceChecks.plist
+
+# JetBrains / CLion / .idea
 **/.idea
-extras/Projucer/JUCECompileEngine.dylib
-
 .idea
+
+# CMake
 **/cmake-build*
-
-.vscode
-/build
-
 CMakeUserPresets.json
+
+# VSCode
+.vscode
+
+# Build folder (generic)
+build/
+**/build
+
+# Misc / Project
 .editorconfig
 
-# Visual Studio
-.vs/
-*.suo
-*.user
-*.vcxproj.user
-*.db
-*.ipch
-
+# Projucer leftover
+extras/Projucer/JUCECompileEngine.dylib

@@ -22,6 +22,10 @@ AccountManagementComponent::AccountManagementComponent(ParentComponent& parent, 
     balanceButton.addListener(this);
     addAndMakeVisible(balanceButton);
 
+    creationButton.setButtonText("Create an Account");
+    creationButton.addListener(this);
+    addAndMakeVisible(creationButton);
+
     transferButton.setButtonText("Transfer Funds");
     transferButton.addListener(this);
     addAndMakeVisible(transferButton);
@@ -39,7 +43,39 @@ void AccountManagementComponent::buttonClicked(juce::Button* button) {
     if (button == &withdrawButton) {
         // Logic for withdrawing money
     } else if (button == &depositButton) {
-        // Logic for depositing money
+        User* user = userManager.getLoggedInUser();
+        if (!user || user->isZeroBankAccounts()) {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "No Accounts",
+                "You do not have any accounts linked. Please create one first."
+            );
+            return;
+        }
+
+        const auto& bankAccounts = user->getAllBankAccounts();
+
+        juce::StringArray accountOptions;
+        for (const auto& accountPair : bankAccounts) {
+            auto account = accountPair.second;
+            accountOptions.add("Account Number: " + juce::String(account->getAccountNumber()) +
+                " | Balance: EUR " + juce::String(account->getBalance()));
+        }
+
+        // Create the alert window
+        alertWindow.reset(new juce::AlertWindow(
+            "Deposit Money",
+            "Select an account and enter the amount to deposit:",
+            juce::AlertWindow::QuestionIcon
+        ));
+
+        alertWindow->addComboBox("accountList", accountOptions, "Accounts");
+        alertWindow->addTextEditor("depositAmount", "0.0", "Deposit Amount:");
+        alertWindow->getTextEditor("depositAmount")->setInputRestrictions(10, "0123456789.");
+        alertWindow->addButton("Confirm", 1, juce::KeyPress(juce::KeyPress::returnKey));
+        alertWindow->addButton("Cancel", 0, juce::KeyPress(juce::KeyPress::escapeKey));
+
+        alertWindow->enterModalState(true, nullptr, true);
     } else if (button == &balanceButton) {
         User* user = userManager.getLoggedInUser();
         if (!user || user->isZeroBankAccounts()) {
@@ -70,12 +106,56 @@ void AccountManagementComponent::buttonClicked(juce::Button* button) {
             "Account Balances",
             balances.str()
         );
+    } else if (button == &creationButton) {
+        //Logic for account creation
     }
     else if (button == &transferButton) {
         //Logic for transfer
     } else if (button == &logoutButton) {
         parentComponent.showMainScreen();
     }
+}
+
+void AccountManagementComponent::handleDepositResponse() {
+    if (!alertWindow) return;
+
+    int selectedAccountIndex = alertWindow->getComboBoxComponent("accountList")->getSelectedItemIndex();
+    if (selectedAccountIndex < 0) {
+        juce::AlertWindow::showMessageBoxAsync(
+            juce::AlertWindow::WarningIcon,
+            "Invalid Selection",
+            "Please select a valid account."
+        );
+        alertWindow.reset();
+        return;
+    }
+
+    auto depositAmountText = alertWindow->getTextEditor("depositAmount")->getText();
+    float depositAmount = depositAmountText.getFloatValue();
+
+    if (depositAmount <= 0) {
+        juce::AlertWindow::showMessageBoxAsync(
+            juce::AlertWindow::WarningIcon,
+            "Invalid Amount",
+            "Please enter a positive amount."
+        );
+        alertWindow.reset();
+        return;
+    }
+
+    const auto& bankAccounts = userManager.getLoggedInUser()->getAllBankAccounts();
+    auto selectedAccountIt = std::next(bankAccounts.begin(), selectedAccountIndex);
+    auto selectedAccount = selectedAccountIt->second;
+
+    selectedAccount->depositMoney(depositAmount);
+
+    juce::AlertWindow::showMessageBoxAsync(
+        juce::AlertWindow::InfoIcon,
+        "Success",
+        "Deposit successful! Updated balance: EUR " + juce::String(selectedAccount->getBalance())
+    );
+
+    alertWindow.reset();
 }
 
 void AccountManagementComponent::paint(juce::Graphics& g)
@@ -87,13 +167,18 @@ void AccountManagementComponent::resized()
 {
     auto area = getLocalBounds().reduced(20);
 
+    // Reserve space for the title label
     auto headerArea = area.removeFromTop(40);
     titleLabel.setBounds(headerArea);
 
-    auto buttonArea = area.removeFromTop(200);
-    withdrawButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
-    depositButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
-    balanceButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
-    transferButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
-    logoutButton.setBounds(buttonArea.removeFromTop(40).reduced(10));
+    // Dynamically calculate the button height and spacing
+    const int buttonHeight = (area.getHeight() - 50) / 6; // 6 buttons total
+
+    // Set bounds for each button, ensuring all fit within the area
+    withdrawButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
+    depositButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
+    balanceButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
+    creationButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
+    transferButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
+    logoutButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
 }

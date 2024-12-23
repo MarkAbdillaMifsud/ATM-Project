@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "userManager.h"
 
 class ParentComponent;
 
@@ -9,7 +10,7 @@ class AccountCreationComponent : public juce::Component,
 
 {
 public:
-	AccountCreationComponent(ParentComponent& parent);
+	AccountCreationComponent(ParentComponent& parent, UserManager& userManager);
 	~AccountCreationComponent() override;
 
 	void paint(juce::Graphics& g) override;
@@ -18,6 +19,8 @@ public:
 
 private:
     ParentComponent& parentComponent;
+    UserManager& userManager;
+
     juce::Label titleLabel;
     juce::Label usernameLabel;
     juce::TextEditor usernameTextBox;

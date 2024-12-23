@@ -1,7 +1,8 @@
 #include "AccountCreationComponent.h"
 #include "ParentComponent.h"
+#include "userManager.h"
 
-AccountCreationComponent::AccountCreationComponent(ParentComponent& parent) : parentComponent(parent) {
+AccountCreationComponent::AccountCreationComponent(ParentComponent& parent, UserManager& userManager) : parentComponent(parent), userManager(userManager) {
     // Title
     titleLabel.setText("Create a New Account", juce::dontSendNotification);
     titleLabel.setJustificationType(juce::Justification::centred);
@@ -67,16 +68,13 @@ void AccountCreationComponent::resized()
 
 
 
-void AccountCreationComponent::buttonClicked(juce::Button* button)
-{
-    if (button == &createAccountButton)
-    {
+void AccountCreationComponent::buttonClicked(juce::Button* button) {
+    if (button == &createAccountButton) {
         juce::String username = usernameTextBox.getText();
         juce::String password = passwordTextBox.getText();
         juce::String confirmPassword = confirmPasswordTextBox.getText();
 
-        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty())
-        {
+        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             juce::AlertWindow::showMessageBoxAsync(
                 juce::AlertWindow::WarningIcon,
                 "Error",
@@ -85,8 +83,7 @@ void AccountCreationComponent::buttonClicked(juce::Button* button)
             return;
         }
 
-        if (password != confirmPassword)
-        {
+        if (password != confirmPassword) {
             juce::AlertWindow::showMessageBoxAsync(
                 juce::AlertWindow::WarningIcon,
                 "Error",
@@ -95,21 +92,47 @@ void AccountCreationComponent::buttonClicked(juce::Button* button)
             return;
         }
 
-        // Add account creation logic here
-        // Example:
-        // if (userManager.createUser(username.toStdString(), password.toStdString())) {
-        //     juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::InfoIcon,
-        //                                            "Success",
-        //                                            "Account created successfully!");
-        //     // Navigate back to login screen
-        // } else {
-        //     juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
-        //                                            "Error",
-        //                                            "Username already exists.");
-        // }
+        if (!userManager.isUniqueUsername(username.toStdString()))
+        {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "Error",
+                "Username already exists."
+            );
+            return;
+        }
+
+        if (!userManager.validatePassword(password.toStdString()))
+        {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "Error",
+                "Password does not meet complexity requirements."
+            );
+            return;
+        }
+
+        // Save user data
+        if (userManager.createUser(username.toStdString(), password.toStdString()))
+        {
+            userManager.saveUsers();
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::InfoIcon,
+                "Success",
+                "Account created successfully!"
+            );
+            parentComponent.showMainScreen(); // Navigate back to main screen
+        }
+        else
+        {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "Error",
+                "Failed to save account. Please try again."
+            );
+        }
     }
-    else if (button == &backButton)
-    {
-        parentComponent.showMainScreen();
+    else if (button == &backButton) {
+        parentComponent.showMainScreen(); // Navigate back to the main screen
     }
 }

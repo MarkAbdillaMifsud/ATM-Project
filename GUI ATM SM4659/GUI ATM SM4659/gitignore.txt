@@ -67,3 +67,11 @@ extras/Projucer/JUCECompileEngine.dylib
 CMakeUserPresets.json
 .editorconfig
 
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.vcxproj.user
+*.db
+*.ipch
+

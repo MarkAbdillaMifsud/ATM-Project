@@ -3,7 +3,7 @@
 #include "AccountCreationComponent.h"
 
 
-ParentComponent::ParentComponent()
+ParentComponent::ParentComponent() : userManager()
 {
     // Initialize MainComponent
     mainComponent = std::make_unique<MainComponent>(*this);
@@ -55,7 +55,7 @@ void ParentComponent::showAccountCreationScreen()
 
     if (!accountCreationComponent)
     {
-        accountCreationComponent = std::make_unique<AccountCreationComponent>(*this);
+        accountCreationComponent = std::make_unique<AccountCreationComponent>(*this, userManager);
         addAndMakeVisible(*accountCreationComponent);
     }
 }

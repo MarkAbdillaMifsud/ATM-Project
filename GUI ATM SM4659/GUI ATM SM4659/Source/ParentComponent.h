@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "userManager.h"
 
 
 class MainComponent;
@@ -21,6 +22,8 @@ public:
 private:
     std::unique_ptr<MainComponent> mainComponent;
     std::unique_ptr<AccountCreationComponent> accountCreationComponent;
+
+    UserManager userManager;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ParentComponent)
 };

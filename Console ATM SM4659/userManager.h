@@ -13,6 +13,7 @@ class UserManager{
         bool isUniqueUsername(const std::string &username);
         bool validatePassword(const std::string &password);
         User* getLoggedInUser() const;
+        std::unordered_map<std::string, User>& getUsers();
 
     private:
         std::unordered_map<std::string, User> users;

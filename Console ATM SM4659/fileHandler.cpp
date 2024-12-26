@@ -41,7 +41,8 @@ void FileHandler::loadUsersFromCSV(unordered_map<string, User> &users, const str
     file.close();
 }
 
-void FileHandler::loadAccountsFromCSV(unordered_map<string, User>& users, const string& filename){
+void FileHandler::loadAccountsFromCSV(std::unordered_map<int, std::shared_ptr<BankAccount>> &bankAccounts, const std::string &filename)
+{
     ifstream file(filename);
     if(!file.is_open()){
         cerr << "Error opening file: " << filename << endl;
@@ -65,18 +66,13 @@ void FileHandler::loadAccountsFromCSV(unordered_map<string, User>& users, const 
 
             shared_ptr<BankAccount> account;
             if(accountType == "SavingsAccount"){
-                account = make_shared<SavingsAccount>(accountNumber);
+                account = make_shared<SavingsAccount>(accountNumber, username);
             } else if(accountType == "CurrentAccount"){
-                account = make_shared<CurrentAccount>(accountNumber);
+                account = make_shared<CurrentAccount>(accountNumber, username);
             }
 
             account->setBalance(balance);
-            auto it = users.find(username);
-            if (it == users.end()) {
-                auto result = users.emplace(username, User(username, ""));
-                it = result.first;
-            }
-            it->second.addBankAccount(account);
+            bankAccounts.emplace(accountNumber, account);
         }
     }
     file.close();
@@ -111,26 +107,35 @@ void FileHandler::saveUsersToCSV(const unordered_map<string, User>& users, const
     file.close();
 }
 
-void FileHandler::saveAccountsToCSV(const unordered_map<string, User>& users, const string& filename){
+void FileHandler::saveAccountsToCSV(const unordered_map<int, shared_ptr<BankAccount>> &bankAccounts, const string &filename)
+{
     ofstream file(filename, ios::out | ios::trunc);
-
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         cerr << "Error opening file for writing: " << filename << endl;
         return;
     }
 
-    file << "Username,AccountType,AccountNumber,Balance\n";
+    // Write header
+    file << "Username,AccountNumber,AccountType,Balance\n";
 
-    for(const auto& pair : users){
-        const auto& user = pair.second;
-        for(const auto& accountPair : user.getAllBankAccounts()){
-            auto account = accountPair.second;
+    for (const auto &pair : bankAccounts)
+    {
+        int accountNumber = pair.first;
+        auto account = pair.second;
 
-            string accountType = dynamic_cast<SavingsAccount*>(account.get()) ? "SavingsAccount" :
-                                 dynamic_cast<CurrentAccount*>(account.get()) ? "CurrentAccount" :
-                                 "BankAccount";
-            file << user.getUsername() << "," << accountType << "," << account->getAccountNumber() << "," << account->getBalance() << "\n";
+        string accountType = "BankAccount"; // Default
+        if (dynamic_cast<SavingsAccount *>(account.get()))
+        {
+            accountType = "SavingsAccount";
         }
+        else if (dynamic_cast<CurrentAccount *>(account.get()))
+        {
+            accountType = "CurrentAccount";
+        }
+
+        string username = account->getUsername();
+        file << username << "," << accountNumber << "," << accountType << "," << account->getBalance() << "\n";
     }
 
     file.close();

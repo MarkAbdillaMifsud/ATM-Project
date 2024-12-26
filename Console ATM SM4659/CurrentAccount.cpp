@@ -3,8 +3,8 @@
 
 using namespace std;
 
-CurrentAccount::CurrentAccount(const int &accountNumber, float depositFee) 
-    : BankAccount(accountNumber), depositFee(depositFee) {}
+CurrentAccount::CurrentAccount(const int& accountNumber, const string& username, float depositFee) 
+    : BankAccount(accountNumber, username), depositFee(depositFee) {}
 
 void CurrentAccount::withdrawMoney(float amount){
     if(amount <= 0){

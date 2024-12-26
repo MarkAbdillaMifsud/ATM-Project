@@ -52,7 +52,7 @@ BankAccount* User::getBankAccount(int accountNumber){
     return nullptr;
 }
 
-unordered_map<int, shared_ptr<BankAccount>> User::getAllBankAccounts() const {
+const unordered_map<int, shared_ptr<BankAccount>>& User::getAllBankAccounts() const {
     return bankAccounts;
 }
 

@@ -3,7 +3,8 @@
 
 using namespace std;
 
-BankAccount::BankAccount(const int& accountNumber): accountNumber(accountNumber) {}
+BankAccount::BankAccount(const int &accountNumber, const string &username)
+    : accountNumber(accountNumber), username(username) {}
 
 int BankAccount::getAccountNumber() const {
     return accountNumber;
@@ -31,4 +32,8 @@ void BankAccount::depositMoney(float amount){
 
 void BankAccount::displayBalance(){
     cout << "The current balance of account: " << accountNumber << " is EUR" << balance << endl;
+}
+
+string BankAccount::getUsername() const {
+    return username;
 }

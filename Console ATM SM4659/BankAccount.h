@@ -2,7 +2,7 @@
 
 class BankAccount{
     public:
-        BankAccount(const int& accountNumber);
+        BankAccount(const int& accountNumber, const std::string& username);
         int getAccountNumber() const;
         float getBalance() const;
         void setAccountNumber(int accountNumber);
@@ -10,8 +10,10 @@ class BankAccount{
         virtual void withdrawMoney(float amount);
         virtual void depositMoney(float amount);
         void displayBalance();
+        std::string getUsername() const;
 
     private:
         int accountNumber;
         float balance;
+        std::string username;
 };

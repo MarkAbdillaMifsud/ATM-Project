@@ -4,8 +4,8 @@
 
 using namespace std;
 
-SavingsAccount::SavingsAccount(const int& accountNumber, float interestRate):
-    BankAccount(accountNumber), interestRate(interestRate){
+SavingsAccount::SavingsAccount(const int& accountNumber, const string& username, float interestRate):
+    BankAccount(accountNumber, username), interestRate(interestRate){
     // set last interest date to time of account creation
     lastInterestDate = time(nullptr);
     }

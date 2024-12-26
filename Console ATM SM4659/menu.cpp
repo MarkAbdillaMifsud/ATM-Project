@@ -6,6 +6,7 @@
 #include <string>
 #include "menu.h"
 #include "userManager.h"
+#include "BankAccountManager.h"
 #include "utility.h"
 #include "BankAccount.h"
 #include "SavingsAccount.h"
@@ -13,10 +14,11 @@
 
 using namespace std;
 
-MainMenu::MainMenu(){}
+MainMenu::MainMenu() : bankAccountManager(userManager){}
 
 void MainMenu::init(){
     userManager.loadUsers();
+    bankAccountManager.loadAccounts();
 }
 
 void MainMenu::displayMainMenu(){
@@ -118,12 +120,12 @@ void MainMenu::createAccount(){
 
     if(userManager.createUser(username, password)){
         cout << "Account created successfully" << endl;
-        //userManager.saveUsers();
     }
 }
 
 void MainMenu::exitApplication(){
     userManager.saveUsers();
+    bankAccountManager.saveAccounts();
     exit(0);
 }
 
@@ -242,19 +244,28 @@ void MainMenu::createBankAccount(){
     } while(!isValidAccountNumber);
 
     shared_ptr<BankAccount> newAccount;
+    User *user = userManager.getLoggedInUser();
+    string username = user->getUsername();
 
-    if (Utility::isValidAccountType(accountType)) {
-        if (accountType == "savings") {
-            newAccount = make_shared<SavingsAccount>(bankAccountNumber);
-        } else {
-            newAccount = make_shared<CurrentAccount>(bankAccountNumber);
+    if (Utility::isValidAccountType(accountType))
+    {
+        if (accountType == "savings" || accountType == "Savings")
+        {
+            newAccount = make_shared<SavingsAccount>(bankAccountNumber, username);
         }
-    } else {
+        else
+        {
+            newAccount = make_shared<CurrentAccount>(bankAccountNumber, username);
+        }
+    }
+    else
+    {
         cout << "Error: Invalid account type detected unexpectedly. Please retry." << endl;
         return;
     }
 
-    userManager.getLoggedInUser()->addBankAccount(newAccount);
+    // Add the account via BankAccountManager
+    bankAccountManager.addBankAccount(newAccount);
 
     cout << "Account with account number " << bankAccountNumber << " successfully created" << endl;
     return;
@@ -304,7 +315,7 @@ void MainMenu::withdrawMoney(){
     }
 
     selectedAccount->withdrawMoney(withdrawAmount);
-    cout << "You have deposited EUR " << withdrawAmount << " to account number " << accountNumber << endl;
+    cout << "You have withdrawn EUR " << withdrawAmount << " to account number " << accountNumber << endl;
     cout << "Updated Balance: EUR " << selectedAccount->getBalance() << endl;
 }
 

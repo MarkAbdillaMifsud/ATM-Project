@@ -3,7 +3,7 @@
 
 class CurrentAccount : public BankAccount {
     public:
-        CurrentAccount(const int& accountNumber, float depositFee = 0.1f);
+        CurrentAccount(const int& accountNumber, const std::string& username, float depositFee = 0.1f);
         void withdrawMoney(float amount) override;
         void depositMoney(float amount) override;
         float getDepositFee() const;

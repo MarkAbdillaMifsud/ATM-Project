@@ -45,7 +45,6 @@ void UserManager::saveUsers(){
     
     try{
         FileHandler::saveUsersToCSV(users, "users.csv");
-        FileHandler::saveAccountsToCSV(users, "bankAccounts.csv");
         cout << "User data saved successfully" << endl;
     } catch (const exception& e){
         cerr << "Error saving user data: " << e.what() << endl;
@@ -56,7 +55,6 @@ void UserManager::loadUsers(){
     try{
         users.clear();
         FileHandler::loadUsersFromCSV(users, "users.csv");
-        FileHandler::loadAccountsFromCSV(users, "bankAccounts.csv");
         cout << "User data loaded successfully" << endl;
     } catch(const exception& e){
         cerr << "Error loading user data: " << e.what() << endl;
@@ -65,6 +63,11 @@ void UserManager::loadUsers(){
 
 User* UserManager::getLoggedInUser() const {
     return loggedInUser;
+}
+
+std::unordered_map<std::string, User>& UserManager::getUsers()
+{
+    return users;
 }
 
 void UserManager::logout(){

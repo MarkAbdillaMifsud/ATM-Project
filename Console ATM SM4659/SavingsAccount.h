@@ -4,7 +4,7 @@
 
 class SavingsAccount : public BankAccount {
     public:
-        SavingsAccount(const int& accountNumber, float interestRate = 0.03f);
+        SavingsAccount(const int& accountNumber, const std::string& username, float interestRate = 0.03f);
         void withdrawMoney(float amount) override;
         void applyInterest();
         float getInterestRate() const;

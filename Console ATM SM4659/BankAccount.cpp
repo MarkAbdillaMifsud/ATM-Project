@@ -4,7 +4,7 @@
 using namespace std;
 
 BankAccount::BankAccount(const int &accountNumber, const string &username)
-    : accountNumber(accountNumber), username(username) {}
+    : accountNumber(accountNumber), username(username), balance(0.0f) {}
 
 int BankAccount::getAccountNumber() const {
     return accountNumber;

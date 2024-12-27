@@ -4,127 +4,279 @@
 #include <fstream>
 #include <sstream>
 #include <typeinfo>
+#include <filesystem>
 #include "fileHandler.h"
 #include "SavingsAccount.h"
 #include "CurrentAccount.h"
 
+#ifdef _WIN32
+    #include <windows.h>
+    #ifndef PATH_MAX
+        #define PATH_MAX MAX_PATH
+    #endif
+#elif __APPLE__
+    #include <mach-o/dyld.h>
+#elif __linux__
+    #include <unistd.h>
+    #include <limits.h>
+#endif
+
 using namespace std;
+
+string FileHandler::getExecutablePath(){
+    char buffer[PATH_MAX];
+    #ifdef _WIN32
+        DWORD length = GetModuleFileNameA(NULL, buffer, sizeof(buffer));
+        if (length == 0 || length == sizeof(buffer))
+            return "";
+    #elif __APPLE__
+        uint32_t size = sizeof(buffer);
+        if (_NSGetExecutablePath(buffer, &size) != 0)
+            return "";
+    #elif __linux__
+        ssize_t length = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+        if (length == -1)
+            return "";
+        buffer[length] = '\0';
+    #endif
+        return std::string(buffer);
+}
+
+string FileHandler::getRootDirectory()
+{
+    string exePath = getExecutablePath();
+    if (exePath.empty())
+    {
+        cerr << "Failed to retrieve executable path." << std::endl;
+        return "";
+    }
+
+    filesystem::path path(exePath);
+    filesystem::path rootDir = path.parent_path(); // Start with executable's directory
+
+    // Define the target root directory name
+    std::string targetDirName = "SMc21467 Assignment SM4659";
+
+    // Traverse up the directory tree to locate the root directory
+    while (!rootDir.empty() && rootDir.filename().string() != targetDirName)
+    {
+        rootDir = rootDir.parent_path();
+    }
+
+    if (rootDir.empty())
+    {
+        std::cerr << "Root directory '" << targetDirName << "' not found in the path hierarchy." << std::endl;
+        return "";
+    }
+
+    return rootDir.string();
+}
 
 void FileHandler::loadUsersFromCSV(unordered_map<string, User> &users, const string &filename)
 {
-    ifstream file(filename);
-
-    if(!file.is_open()){
-        cerr << "Error opening file: " << filename << endl;
+    string rootDir = getRootDirectory();
+    if (rootDir.empty()) {
+        std::cerr << "Unable to determine root directory for loading users." << std::endl;
         return;
     }
 
-    string line;
-    bool isFirstLine = true;
+    std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
+    std::string absolutePath = filePath.string();
+    std::cout << "Loading users from: " << absolutePath << std::endl;
 
-    while(getline(file, line)){
-        if(isFirstLine){ //skip header row
+    std::ifstream file(absolutePath);
+    if (!file.is_open()) {
+        std::cerr << "Error opening users file: " << absolutePath << std::endl;
+        return;
+    }
+
+    std::string line;
+    bool isFirstLine = true;
+    while (std::getline(file, line)) {
+        if (isFirstLine) { // Skip header
             isFirstLine = false;
             continue;
         }
 
-        istringstream ss(line);
-        string username, password;
-        if(getline(ss, username, ',') && getline(ss, password, ',')){
-            if(users.find(username) == users.end()){
+        if (line.empty()) {
+            std::cerr << "Encountered an empty line in users.csv, skipping." << std::endl;
+            continue;
+        }
+
+        std::istringstream ss(line);
+        std::string username, password;
+        if (std::getline(ss, username, ',') && std::getline(ss, password, ',')) {
+            if (users.find(username) == users.end()) {
                 users.emplace(username, User(username, password));
+                std::cout << "Loaded user: " << username << std::endl;
+            } else {
+                std::cerr << "Duplicate user detected: " << username << ", skipping." << std::endl;
             }
         } else {
-            cerr << "Error parsing line: " << line << endl;
+            std::cerr << "Malformed line in users.csv: " << line << ", skipping." << std::endl;
         }
     }
+
     file.close();
 }
 
-void FileHandler::loadAccountsFromCSV(std::unordered_map<int, std::shared_ptr<BankAccount>> &bankAccounts, const std::string &filename)
+void FileHandler::saveUsersToCSV(const std::unordered_map<std::string, User> &users, const std::string &filename)
 {
-    ifstream file(filename);
-    if(!file.is_open()){
-        cerr << "Error opening file: " << filename << endl;
+    std::string rootDir = getRootDirectory();
+    if (rootDir.empty())
+    {
+        std::cerr << "Unable to determine root directory for saving users." << std::endl;
         return;
     }
 
-    string line;
-    bool isFirstLine = true;
+    std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
+    std::string absolutePath = filePath.string();
+    std::cout << "Saving users to: " << absolutePath << std::endl;
 
-    while(getline(file, line)){
-        if(isFirstLine){
-            isFirstLine = false;
-            continue;
-        }
-
-        istringstream ss(line);
-        string username, accountType, accountNumberStr, balanceStr;
-        if (getline(ss, username, ',') && getline(ss, accountType, ',') && getline(ss, accountNumberStr, ',') && getline(ss, balanceStr, ',')) {
-            int accountNumber = stoi(accountNumberStr);
-            float balance = stof(balanceStr);
-
-            shared_ptr<BankAccount> account;
-            if(accountType == "SavingsAccount"){
-                account = make_shared<SavingsAccount>(accountNumber, username);
-            } else if(accountType == "CurrentAccount"){
-                account = make_shared<CurrentAccount>(accountNumber, username);
-            }
-
-            account->setBalance(balance);
-            bankAccounts.emplace(accountNumber, account);
-        }
-    }
-    file.close();
-}
-
-void FileHandler::saveUsersToCSV(const unordered_map<string, User>& users, const string& filename) {
-    ofstream file(filename, ios::out | ios::trunc);
-
-    if (!file.is_open()) {
-        cerr << "Error opening file for writing: " << filename << endl;
+    std::ofstream file(absolutePath, std::ios::out | std::ios::trunc);
+    if (!file.is_open())
+    {
+        std::cerr << "Error opening users file for writing: " << absolutePath << std::endl;
         return;
     }
 
-    // Write the header
+    // Write header
     file << "Username,Password\n";
 
-    if (file.fail()) {
-        cerr << "Error writing header to file: " << filename << endl;
-        file.close();
-        return;
-    }
-
     // Write user data
-    for (const auto& pair : users) {
+    for (const auto &pair : users)
+    {
         file << pair.first << "," << pair.second.getPassword() << "\n";
     }
 
-    if (file.fail()) {
-        cerr << "Error writing to file: " << filename << endl;
+    std::cout << "Users saved successfully." << std::endl;
+    file.close();
+}
+
+// Load Bank Accounts from CSV
+void FileHandler::loadAccountsFromCSV(std::unordered_map<int, std::shared_ptr<BankAccount>> &bankAccounts, const std::string &filename)
+{
+    std::string rootDir = getRootDirectory();
+    if (rootDir.empty())
+    {
+        std::cerr << "Unable to determine root directory for loading bank accounts." << std::endl;
+        return;
+    }
+
+    std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
+    std::string absolutePath = filePath.string();
+    std::cout << "Loading bank accounts from: " << absolutePath << std::endl;
+
+    std::ifstream file(absolutePath);
+    if (!file.is_open())
+    {
+        std::cerr << "Error opening bank accounts file: " << absolutePath << std::endl;
+        return;
+    }
+
+    std::string line;
+    bool isFirstLine = true;
+    int lineNumber = 0;
+    while (std::getline(file, line))
+    {
+        lineNumber++;
+        if (isFirstLine)
+        { // Skip header
+            isFirstLine = false;
+            continue;
+        }
+
+        if (line.empty())
+        {
+            std::cerr << "Encountered an empty line at line " << lineNumber << " in bankAccounts.csv, skipping." << std::endl;
+            continue;
+        }
+
+        std::istringstream ss(line);
+        std::string username, accountNumberStr, accountType, balanceStr;
+        if (std::getline(ss, username, ',') && std::getline(ss, accountNumberStr, ',') &&
+            std::getline(ss, accountType, ',') && std::getline(ss, balanceStr, ','))
+        {
+            try
+            {
+                int accountNumber = std::stoi(accountNumberStr);
+                float balance = std::stof(balanceStr);
+
+                // Check for duplicate account numbers
+                if (bankAccounts.find(accountNumber) != bankAccounts.end())
+                {
+                    std::cerr << "Duplicate account number: " << accountNumber << " at line " << lineNumber << ", skipping." << std::endl;
+                    continue;
+                }
+
+                std::shared_ptr<BankAccount> account;
+                if (accountType == "SavingsAccount")
+                {
+                    account = std::make_shared<SavingsAccount>(accountNumber, username);
+                }
+                else if (accountType == "CurrentAccount")
+                {
+                    account = std::make_shared<CurrentAccount>(accountNumber, username);
+                }
+                else
+                {
+                    std::cerr << "Unknown account type: " << accountType << " at line " << lineNumber << ", skipping." << std::endl;
+                    continue; // Skip unknown account types
+                }
+
+                account->setBalance(balance);
+                bankAccounts.emplace(accountNumber, account);
+                std::cout << "Loaded bank account number: " << accountNumber << " for user: " << username << std::endl;
+            }
+            catch (const std::invalid_argument &)
+            {
+                std::cerr << "Invalid data format at line " << lineNumber << " in bankAccounts.csv: " << line << ", skipping." << std::endl;
+            }
+            catch (const std::out_of_range &)
+            {
+                std::cerr << "Data out of range at line " << lineNumber << " in bankAccounts.csv: " << line << ", skipping." << std::endl;
+            }
+        }
+        else
+        {
+            std::cerr << "Incomplete data at line " << lineNumber << " in bankAccounts.csv: " << line << ", skipping." << std::endl;
+        }
     }
 
     file.close();
 }
 
-void FileHandler::saveAccountsToCSV(const unordered_map<int, shared_ptr<BankAccount>> &bankAccounts, const string &filename)
+// Save Bank Accounts to CSV
+void FileHandler::saveAccountsToCSV(const std::unordered_map<int, std::shared_ptr<BankAccount>> &bankAccounts, const std::string &filename)
 {
-    ofstream file(filename, ios::out | ios::trunc);
+    std::string rootDir = getRootDirectory();
+    if (rootDir.empty())
+    {
+        std::cerr << "Unable to determine root directory for saving bank accounts." << std::endl;
+        return;
+    }
+
+    std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
+    std::string absolutePath = filePath.string();
+    std::cout << "Saving bank accounts to: " << absolutePath << std::endl;
+
+    std::ofstream file(absolutePath, std::ios::out | std::ios::trunc);
     if (!file.is_open())
     {
-        cerr << "Error opening file for writing: " << filename << endl;
+        std::cerr << "Error opening bank accounts file for writing: " << absolutePath << std::endl;
         return;
     }
 
     // Write header
     file << "Username,AccountNumber,AccountType,Balance\n";
 
+    // Write account data
     for (const auto &pair : bankAccounts)
     {
         int accountNumber = pair.first;
         auto account = pair.second;
 
-        string accountType = "BankAccount"; // Default
+        std::string accountType = "BankAccount"; // Default type
         if (dynamic_cast<SavingsAccount *>(account.get()))
         {
             accountType = "SavingsAccount";
@@ -134,9 +286,12 @@ void FileHandler::saveAccountsToCSV(const unordered_map<int, shared_ptr<BankAcco
             accountType = "CurrentAccount";
         }
 
-        string username = account->getUsername();
-        file << username << "," << accountNumber << "," << accountType << "," << account->getBalance() << "\n";
+        std::string username = account->getUsername();
+        float balance = account->getBalance();
+
+        file << username << "," << accountNumber << "," << accountType << "," << balance << "\n";
     }
 
+    std::cout << "Bank accounts saved successfully." << std::endl;
     file.close();
 }

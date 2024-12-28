@@ -45,10 +45,6 @@ void BankAccountManager::loadAccounts(){
 }
 
 void BankAccountManager::saveAccounts(){
-    static int saveCallCount = 0;
-    saveCallCount++;
-    cout << "saveAccounts() called " << saveCallCount << " times." << endl;
-
     try
     {
         FileHandler::saveAccountsToCSV(bankAccounts, "bankAccounts.csv");

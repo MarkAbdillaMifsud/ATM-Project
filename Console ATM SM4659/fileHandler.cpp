@@ -82,7 +82,6 @@ void FileHandler::loadUsersFromCSV(unordered_map<string, User> &users, const str
 
     std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
     std::string absolutePath = filePath.string();
-    std::cout << "Loading users from: " << absolutePath << std::endl;
 
     std::ifstream file(absolutePath);
     if (!file.is_open()) {
@@ -108,7 +107,6 @@ void FileHandler::loadUsersFromCSV(unordered_map<string, User> &users, const str
         if (std::getline(ss, username, ',') && std::getline(ss, password, ',')) {
             if (users.find(username) == users.end()) {
                 users.emplace(username, User(username, password));
-                std::cout << "Loaded user: " << username << std::endl;
             } else {
                 std::cerr << "Duplicate user detected: " << username << ", skipping." << std::endl;
             }
@@ -131,7 +129,6 @@ void FileHandler::saveUsersToCSV(const std::unordered_map<std::string, User> &us
 
     std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
     std::string absolutePath = filePath.string();
-    std::cout << "Saving users to: " << absolutePath << std::endl;
 
     std::ofstream file(absolutePath, std::ios::out | std::ios::trunc);
     if (!file.is_open())
@@ -165,7 +162,6 @@ void FileHandler::loadAccountsFromCSV(std::unordered_map<int, std::shared_ptr<Ba
 
     std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
     std::string absolutePath = filePath.string();
-    std::cout << "Loading bank accounts from: " << absolutePath << std::endl;
 
     std::ifstream file(absolutePath);
     if (!file.is_open())
@@ -226,7 +222,6 @@ void FileHandler::loadAccountsFromCSV(std::unordered_map<int, std::shared_ptr<Ba
 
                 account->setBalance(balance);
                 bankAccounts.emplace(accountNumber, account);
-                std::cout << "Loaded bank account number: " << accountNumber << " for user: " << username << std::endl;
             }
             catch (const std::invalid_argument &)
             {
@@ -258,7 +253,6 @@ void FileHandler::saveAccountsToCSV(const std::unordered_map<int, std::shared_pt
 
     std::filesystem::path filePath = std::filesystem::path(rootDir) / filename;
     std::string absolutePath = filePath.string();
-    std::cout << "Saving bank accounts to: " << absolutePath << std::endl;
 
     std::ofstream file(absolutePath, std::ios::out | std::ios::trunc);
     if (!file.is_open())
@@ -291,7 +285,5 @@ void FileHandler::saveAccountsToCSV(const std::unordered_map<int, std::shared_pt
 
         file << username << "," << accountNumber << "," << accountType << "," << balance << "\n";
     }
-
-    std::cout << "Bank accounts saved successfully." << std::endl;
     file.close();
 }

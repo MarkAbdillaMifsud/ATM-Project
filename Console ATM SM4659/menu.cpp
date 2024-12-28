@@ -166,23 +166,18 @@ void MainMenu::processApplicationMenuChoice(int userChoice, bool &repeat){
         }
         switch(userChoice){
             case 1:
-                cout << "Withdraw money" << endl;
                 withdrawMoney();
                 break;
             case 2:
-                cout << "Deposit money" << endl;
                 depositMoney();
                 break;
             case 3:
-                cout << "Display Balance" << endl;
                 showBalances();
                 break;
             case 4:
-                cout << "Create bank account" << endl;
                 createBankAccount();
                 break;
             case 5:
-                cout << "Transfer money" << endl;
                 transferMoney();
                 break;
             case 6:
@@ -308,7 +303,7 @@ void MainMenu::withdrawMoney(){
 
     // Prompt for withdraw amount
     cout << "Enter the amount you wish to withdraw: ";
-    while (!(cin >> withdrawAmount)) {
+    while (!(cin >> withdrawAmount) || withdrawAmount <= 0) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Invalid amount. Please enter a number: ";

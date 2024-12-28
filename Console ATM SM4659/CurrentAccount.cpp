@@ -39,3 +39,7 @@ void CurrentAccount::depositMoney(float amount){
 float CurrentAccount::getDepositFee() const {
     return depositFee;
 }
+
+string CurrentAccount::getAccountType() const {
+    return "Current";
+}

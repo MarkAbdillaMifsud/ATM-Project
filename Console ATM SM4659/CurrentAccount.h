@@ -8,6 +8,7 @@ class CurrentAccount : public BankAccount {
         void depositMoney(float amount) override;
         float getDepositFee() const;
         bool isBalanceNegative();
+        virtual std::string getAccountType() const override;
     
     private:
         float depositFee;

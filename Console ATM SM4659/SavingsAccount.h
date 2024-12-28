@@ -8,6 +8,7 @@ class SavingsAccount : public BankAccount {
         void withdrawMoney(float amount) override;
         void applyInterest();
         float getInterestRate() const;
+        std::string getAccountType() const override;
     
     private:
         float interestRate;

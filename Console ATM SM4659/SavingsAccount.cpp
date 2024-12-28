@@ -39,5 +39,8 @@ float SavingsAccount::getInterestRate() const {
     return interestRate;
 }
 
+string SavingsAccount::getAccountType() const {
+    return "Savings";
+}
 
 

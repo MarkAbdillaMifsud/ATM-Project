@@ -11,6 +11,7 @@ class BankAccount{
         virtual void depositMoney(float amount);
         void displayBalance();
         std::string getUsername() const;
+        virtual std::string getAccountType() const;
 
     private:
         int accountNumber;

@@ -37,3 +37,7 @@ void BankAccount::displayBalance(){
 string BankAccount::getUsername() const {
     return username;
 }
+
+string BankAccount::getAccountType() const {
+    return "BankAccount";
+}

@@ -23,6 +23,9 @@ void BankAccount::setBalance(float balance){
 }
 
 void BankAccount::withdrawMoney(float amount) {
+    if (amount > balance) {
+        throw std::runtime_error("Insufficient funds. Cannot withdraw more than the current balance.");
+    }
     balance -= amount;
 }
 

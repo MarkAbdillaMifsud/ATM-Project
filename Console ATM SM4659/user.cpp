@@ -30,7 +30,6 @@ void User::addBankAccount(shared_ptr<BankAccount> account){
     }
 
     bankAccounts[accountNumber] = account;
-    cout << "Account with account number: " << accountNumber << " successfully created" << endl;
 }
 
 void User::removeBankAccount(int accountNumber){

@@ -23,7 +23,7 @@ void MainMenu::init(){
 
 void MainMenu::displayMainMenu(){
     cout << "***********************************" << endl;
-    cout << "Welcome to user's ATM" << endl;
+    cout << "Welcome to Mark's ATM" << endl;
     cout << "***********************************" << endl;
     cout << "1) Login to system" << endl;
     cout << "2) Create new user account" << endl;
@@ -286,7 +286,7 @@ void MainMenu::withdrawMoney(){
 
         cout << "Single bank account detected with account number: " << accountNumber << endl;
     } else {
-        cout << "You have multiple accounts. Please enter the number of the account you wish to deposit into:" << endl;
+        cout << "You have multiple accounts. Please enter the number of the account you wish to withdraw from:" << endl;
         for (const auto &accountPair : bankAccounts) {
             cout << "Account Number: " << accountPair.first
                  << ", Balance: EUR " << accountPair.second->getBalance() << endl;

@@ -38,3 +38,13 @@ xcuserdata/
 # Specifically ignore the entire folder at "GUI ATM SM4659/Builds"
 ###############################################################################
 GUI ATM SM4659/Builds/
+GUI ATM SM4659/GUI ATM SM4659/Builds/
+
+# Visual Studio / C++ build artifacts
+*.pdb
+*.ilk
+*.ipch
+*.db
+
+# Also ignore the .vs folder
+.vs/

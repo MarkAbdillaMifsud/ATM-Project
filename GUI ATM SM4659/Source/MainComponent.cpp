@@ -3,7 +3,7 @@
 
 //==============================================================================
 MainComponent::MainComponent(ParentComponent& parent, UserManager& userManager) : parentComponent(parent), userManager(userManager) {
-    titleLabel.setText("Welcome to ATM", juce::dontSendNotification);
+    titleLabel.setText("Welcome to Mark's ATM", juce::dontSendNotification);
     titleLabel.setJustificationType(juce::Justification::centred);
     titleLabel.setFont(juce::Font(24.0f, juce::Font::bold));
     addAndMakeVisible(titleLabel);

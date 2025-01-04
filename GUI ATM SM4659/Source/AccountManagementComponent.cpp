@@ -1,11 +1,11 @@
 #include "AccountManagementComponent.h"
-#include "ParentComponent.h"
-#include "SavingsAccount.h"
-#include "CurrentAccount.h"
+#include "TransferComponent.h"
+#include "../../Console ATM SM4659/SavingsAccount.h"
+#include "../../Console ATM SM4659/CurrentAccount.h"
 
-AccountManagementComponent::AccountManagementComponent(ParentComponent& parent, UserManager& userManager) : parentComponent(parent), userManager(userManager)
+AccountManagementComponent::AccountManagementComponent(ParentComponent& parent, UserManager& userManager, BankAccountManager& bankAccountManager) : parentComponent(parent), userManager(userManager), bankAccountManager(bankAccountManager)
 {
-	titleLabel.setText("Account Management", juce::dontSendNotification);
+	titleLabel.setText("Welcome " + userManager.getLoggedInUser()->getUsername(), juce::dontSendNotification);
 	titleLabel.setJustificationType(juce::Justification::centred);
 	titleLabel.setFont(juce::Font(24.0f, juce::Font::bold));
 	addAndMakeVisible(titleLabel);
@@ -41,9 +41,24 @@ AccountManagementComponent::~AccountManagementComponent(){}
 
 void AccountManagementComponent::buttonClicked(juce::Button* button) {
     if (button == &withdrawButton) {
-        // Logic for withdrawing money
+        User* user = userManager.getLoggedInUser();
+
+        if (!user || user->isZeroBankAccounts()) {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "No Accounts",
+                "You do not have any accounts linked. Please create one first."
+            );
+            return;
+        }
+        if (withdrawComponent == nullptr) {
+            withdrawComponent = new WithdrawComponent(this, userManager, bankAccountManager);
+            addAndMakeVisible(withdrawComponent);
+            withdrawComponent->toFront(true);
+        }
     } else if (button == &depositButton) {
         User* user = userManager.getLoggedInUser();
+
         if (!user || user->isZeroBankAccounts()) {
             juce::AlertWindow::showMessageBoxAsync(
                 juce::AlertWindow::WarningIcon,
@@ -53,29 +68,11 @@ void AccountManagementComponent::buttonClicked(juce::Button* button) {
             return;
         }
 
-        const auto& bankAccounts = user->getAllBankAccounts();
-
-        juce::StringArray accountOptions;
-        for (const auto& accountPair : bankAccounts) {
-            auto account = accountPair.second;
-            accountOptions.add("Account Number: " + juce::String(account->getAccountNumber()) +
-                " | Balance: EUR " + juce::String(account->getBalance()));
+        if (depositComponent == nullptr) {
+            depositComponent = new DepositComponent(parentComponent, userManager, bankAccountManager);
+            addAndMakeVisible(depositComponent);
+            depositComponent->toFront(true);
         }
-
-        // Create the alert window
-        alertWindow.reset(new juce::AlertWindow(
-            "Deposit Money",
-            "Select an account and enter the amount to deposit:",
-            juce::AlertWindow::QuestionIcon
-        ));
-
-        alertWindow->addComboBox("accountList", accountOptions, "Accounts");
-        alertWindow->addTextEditor("depositAmount", "0.0", "Deposit Amount:");
-        alertWindow->getTextEditor("depositAmount")->setInputRestrictions(10, "0123456789.");
-        alertWindow->addButton("Confirm", 1, juce::KeyPress(juce::KeyPress::returnKey));
-        alertWindow->addButton("Cancel", 0, juce::KeyPress(juce::KeyPress::escapeKey));
-
-        alertWindow->enterModalState(true, nullptr, true);
     } else if (button == &balanceButton) {
         User* user = userManager.getLoggedInUser();
         if (!user || user->isZeroBankAccounts()) {
@@ -106,11 +103,25 @@ void AccountManagementComponent::buttonClicked(juce::Button* button) {
             "Account Balances",
             balances.str()
         );
-    } else if (button == &creationButton) {
-        //Logic for account creation
     }
-    else if (button == &transferButton) {
-        //Logic for transfer
+    else if (button == &creationButton) {
+        parentComponent.showBankAccountCreationScreen();
+    } else if (button == &transferButton) {
+        User* user = userManager.getLoggedInUser();
+        if (!user || user->isZeroBankAccounts()) {
+            juce::AlertWindow::showMessageBoxAsync(
+                juce::AlertWindow::WarningIcon,
+                "No Accounts",
+                "You do not have any accounts linked. Please create one first."
+            );
+            return;
+        }
+
+        if (transferComponent == nullptr) {
+            transferComponent = new TransferComponent(this, userManager, bankAccountManager);
+            addAndMakeVisible(transferComponent);
+            transferComponent->toFront(true);
+       }
     } else if (button == &logoutButton) {
         parentComponent.showMainScreen();
     }
@@ -181,4 +192,22 @@ void AccountManagementComponent::resized()
     creationButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
     transferButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
     logoutButton.setBounds(area.removeFromTop(buttonHeight).reduced(5));
+}
+
+void AccountManagementComponent::removeWithdrawComponent(WithdrawComponent* wComponent) {
+    if (wComponent == withdrawComponent) {
+        removeChildComponent(withdrawComponent);
+        delete withdrawComponent;
+        withdrawComponent = nullptr;
+        repaint();
+    }
+}
+
+void AccountManagementComponent::removeTransferComponent(TransferComponent* tComponent) {
+    if (tComponent == transferComponent) {
+        removeChildComponent(transferComponent);
+        delete transferComponent;
+        transferComponent = nullptr;
+        repaint();
+    }
 }

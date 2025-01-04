@@ -1,0 +1,7 @@
+Username,AccountNumber,AccountType,Balance
+FirstTestAccount,63247,CurrentAccount,947
+NewTestAccount,28654,CurrentAccount,8650
+FirstTestAccount,33987,CurrentAccount,1688
+NewTestAccount,57921,SavingsAccount,6100
+SecondTestAccount,74652,SavingsAccount,0
+FirstTestAccount,56874,SavingsAccount,3997

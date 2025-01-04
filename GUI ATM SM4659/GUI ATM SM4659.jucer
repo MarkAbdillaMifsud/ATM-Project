@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="AdVHZy" name="GUI ATM SM4659" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+  <MAINGROUP id="AfmPYN" name="GUI ATM SM4659">
+    <GROUP id="{F4C70DEE-E44D-DD94-2E44-39BAA2D301D0}" name="Source">
+      <FILE id="TTjDkn" name="TransferComponent.cpp" compile="1" resource="0"
+            file="Source/TransferComponent.cpp"/>
+      <FILE id="wbal8w" name="TransferComponent.h" compile="0" resource="0"
+            file="Source/TransferComponent.h"/>
+      <FILE id="H0xeB4" name="WithdrawComponent.cpp" compile="1" resource="0"
+            file="Source/WithdrawComponent.cpp"/>
+      <FILE id="ITfiVF" name="WithdrawComponent.h" compile="0" resource="0"
+            file="Source/WithdrawComponent.h"/>
+      <FILE id="I7M2NH" name="DepositComponent.cpp" compile="1" resource="0"
+            file="Source/DepositComponent.cpp"/>
+      <FILE id="Mtgr3w" name="DepositComponent.h" compile="0" resource="0"
+            file="Source/DepositComponent.h"/>
+      <FILE id="ykeiZY" name="BankAccount.cpp" compile="1" resource="0" file="../Console ATM SM4659/BankAccount.cpp"/>
+      <FILE id="m685fY" name="BankAccount.h" compile="0" resource="0" file="../Console ATM SM4659/BankAccount.h"/>
+      <FILE id="R3tmc0" name="BankAccountManager.cpp" compile="1" resource="0"
+            file="../Console ATM SM4659/BankAccountManager.cpp"/>
+      <FILE id="MHSc60" name="BankAccountManager.h" compile="0" resource="0"
+            file="../Console ATM SM4659/BankAccountManager.h"/>
+      <FILE id="vJwrAA" name="CurrentAccount.cpp" compile="1" resource="0"
+            file="../Console ATM SM4659/CurrentAccount.cpp"/>
+      <FILE id="bJFvJY" name="CurrentAccount.h" compile="0" resource="0"
+            file="../Console ATM SM4659/CurrentAccount.h"/>
+      <FILE id="ch1kOw" name="fileHandler.cpp" compile="1" resource="0" file="../Console ATM SM4659/fileHandler.cpp"/>
+      <FILE id="yIMIob" name="fileHandler.h" compile="0" resource="0" file="../Console ATM SM4659/fileHandler.h"/>
+      <FILE id="kFbzEH" name="menu.cpp" compile="1" resource="0" file="../Console ATM SM4659/menu.cpp"/>
+      <FILE id="ZsYhNQ" name="menu.h" compile="0" resource="0" file="../Console ATM SM4659/menu.h"/>
+      <FILE id="M7ETTq" name="SavingsAccount.cpp" compile="1" resource="0"
+            file="../Console ATM SM4659/SavingsAccount.cpp"/>
+      <FILE id="yTmqBA" name="SavingsAccount.h" compile="0" resource="0"
+            file="../Console ATM SM4659/SavingsAccount.h"/>
+      <FILE id="cIexY9" name="user.cpp" compile="1" resource="0" file="../Console ATM SM4659/user.cpp"/>
+      <FILE id="iTwt62" name="user.h" compile="0" resource="0" file="../Console ATM SM4659/user.h"/>
+      <FILE id="KGN2xh" name="userManager.cpp" compile="1" resource="0" file="../Console ATM SM4659/userManager.cpp"/>
+      <FILE id="frrOP6" name="userManager.h" compile="0" resource="0" file="../Console ATM SM4659/userManager.h"/>
+      <FILE id="OEsYAn" name="utility.cpp" compile="1" resource="0" file="../Console ATM SM4659/utility.cpp"/>
+      <FILE id="uCoThG" name="utility.h" compile="0" resource="0" file="../Console ATM SM4659/utility.h"/>
+      <FILE id="doohrt" name="AccountCreationComponent.cpp" compile="1" resource="0"
+            file="Source/AccountCreationComponent.cpp"/>
+      <FILE id="O8SS6r" name="AccountCreationComponent.h" compile="0" resource="0"
+            file="Source/AccountCreationComponent.h"/>
+      <FILE id="ayNJGM" name="AccountManagementComponent.cpp" compile="1"
+            resource="0" file="Source/AccountManagementComponent.cpp"/>
+      <FILE id="ubQzI6" name="AccountManagementComponent.h" compile="0" resource="0"
+            file="Source/AccountManagementComponent.h"/>
+      <FILE id="FhHYxr" name="BankAccountCreationComponent.cpp" compile="1"
+            resource="0" file="Source/BankAccountCreationComponent.cpp"/>
+      <FILE id="yTrGR8" name="BankAccountCreationComponent.h" compile="0"
+            resource="0" file="Source/BankAccountCreationComponent.h"/>
+      <FILE id="bl2QHq" name="ParentComponent.cpp" compile="1" resource="0"
+            file="Source/ParentComponent.cpp"/>
+      <FILE id="rbRIEu" name="ParentComponent.h" compile="0" resource="0"
+            file="Source/ParentComponent.h"/>
+      <FILE id="WarIYB" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="mUpAp5" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="uDj919" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="GUI ATM SM4659"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="GUI ATM SM4659"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../../../Downloads/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../../Downloads/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../../Downloads/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../../Downloads/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../../Downloads/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+</JUCERPROJECT>

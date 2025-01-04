@@ -432,6 +432,7 @@ void MainMenu::transferMoney(){
     toAccount = bankAccounts.at(toAccountNumber);
 
     cout << "Enter the amount to transfer: ";
+
     while (!(cin >> transferAmount) || transferAmount <= 0) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');

@@ -65,7 +65,7 @@ User* UserManager::getLoggedInUser() const {
     return loggedInUser;
 }
 
-std::unordered_map<std::string, User>& UserManager::getUsers()
+unordered_map<string, User>& UserManager::getUsers()
 {
     return users;
 }
